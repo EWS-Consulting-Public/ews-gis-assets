@@ -75,25 +75,3 @@ uv sync --locked --all-extras --dev
 # Run the update script
 uv run main.py
 ```
-
-### Pre-commit Hooks
-
-```bash
-# Install pre-commit hooks
-uv run pre-commit install
-
-# Run pre-commit manually
-make
-```
-
-## 📄 License
-
-[Add your license information here]
-
-## 🤝 Contributing
-
-Contributions are welcome! Please open an issue or submit a pull request.
-
-## 📞 Contact
-
-EWS-Consulting-Public
