@@ -3,33 +3,47 @@ on:
   schedule:
     - cron: "0 0 * * *" # Runs daily at midnight UTC
   workflow_dispatch: # Allows manual trigger
+
+permissions:
+  contents: write
+
 jobs:
   update-geojson:
     runs-on: ubuntu-latest
+
     steps:
-      # Step 1: Check out the repository
-      - name: Checkout repository
-        uses: actions/checkout@v3
-      # Step 2: Set up Python
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      - uses: actions/checkout@v6
+
+      - name: "Set up Python"
+        uses: actions/setup-python@v6
         with:
-          python-version: "3.9"
-      # Step 3: Install Python dependencies
-      - name: Install dependencies
-        run: pip install requests
-      # Step 4: Run the script
+          python-version-file: ".python-version"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+
+      - name: Install the project
+        run: uv sync --locked --all-extras --dev
+
       - name: Run the update script
-        run: python download_geojson.py
-      # Step 5: Commit and push changes if there are updates
-      - name: Commit and push changes
-        if: success()
+        run: uv run main.py
+
+      - name: Check for changes
+        id: check_changes
         run: |
           if [ "$(git status --porcelain)" != "" ]; then
-            git config --global user.name "github-actions[bot]"
-            git config --global user.email "github-actions[bot]@users.noreply.github.com"
-            git add .
-            git commit -m "Update GeoJSON file (automated)"
-            git push
+            echo "changes=true" >> $GITHUB_OUTPUT
           else
-            echo "No changes detected. Skipping commit."
+            echo "changes=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and push changes
+        if: steps.check_changes.outputs.changes == 'true'
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/
+          git commit -m "chore: update GIS asset files (automated)"
+          git push
