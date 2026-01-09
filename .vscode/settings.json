@@ -1,0 +1,157 @@
+{
+    "[html]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": false
+    },
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[json]": {
+        "editor.defaultFormatter": "vscode.json-language-features",
+        "editor.formatOnSave": false
+    },
+    "[jsonc]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": false
+    },
+    "[markdown]": {
+        // "editor.codeActionsOnSave": {
+        //     "source.fixAll.markdownlint": "explicit"
+        // },
+        "editor.defaultFormatter": "yzhang.markdown-all-in-one",
+        "editor.formatOnPaste": false,
+        "editor.formatOnSave": false,
+        "editor.tabSize": 2
+    },
+    "[python]": {
+        "diffEditor.ignoreTrimWhitespace": false,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit"
+        },
+        "editor.defaultFormatter": "charliermarsh.ruff",
+        "editor.formatOnSave": true
+    },
+    "[xml]": {
+        "editor.defaultFormatter": "redhat.vscode-xml",
+        "editor.formatOnSave": false
+    },
+    "[yaml]": {
+        "editor.defaultFormatter": "redhat.vscode-yaml",
+        "editor.formatOnSave": false
+    },
+    "editor.accessibilitySupport": "off",
+    "editor.formatOnSave": false,
+    "editor.indentSize": "tabSize",
+    "editor.inlineSuggest.showToolbar": "always",
+    "editor.minimap.enabled": false,
+    "editor.tabCompletion": "on",
+    "editor.tabSize": 4,
+    "emmet.includeLanguages": {
+        "jinja-html": "html"
+    },
+    "explorer.confirmDragAndDrop": false,
+    "explorer.excludeGitIgnore": true,
+    "files.autoSave": "off",
+    "files.autoSaveDelay": 500,
+    "files.eol": "\n",
+    "files.watcherExclude": {
+        "**/__pycache__/**": true,
+        "**/.git/objects/**": true,
+        "**/.git/subtree-cache/**": true,
+        "**/.ipynb_checkpoints/**": true,
+        "**/.nox-test-env/**": true,
+        "**/.nox/**": true,
+        "**/.pytest_cache/**": true,
+        "**/.venv/**": true,
+        "**/*.egg-info/**": true,
+        "**/build/**": true,
+        "**/dist/**": true,
+        "**/node_modules/**": true,
+        "packages/**/build/**": true,
+        "packages/**/dist/**": true
+    },
+    "git.autofetch": true,
+    "git.confirmSync": false,
+    "git.detectSubmodulesLimit": 100,
+    "git.enableSmartCommit": true,
+    "git.ignoreSubmodules": false,
+    "git.showProgress": true,
+    "github.copilot.chat.codesearch.enabled": true,
+    "github.copilot.enable": {
+        "*": true,
+        "cpp": true,
+        "markdown": true,
+        "plaintext": false,
+        "python": true,
+        "scminput": false
+    },
+    "github.copilot.nextEditSuggestions.enabled": true,
+    "githubPullRequests.createOnPublishBranch": "never",
+    "inlineChat.enableV2": true,
+    "inlineChat.notebookAgent": true,
+    "jupyter.allowUnauthorizedRemoteConnection": true,
+    "jupyter.askForKernelRestart": false,
+    "jupyter.enableKernelCompletions": true,
+    "jupyter.runStartupCommands": [
+        "%load_ext autoreload",
+        "%autoreload 2"
+    ],
+    "markdown.extension.completion.enabled": true,
+    "markdown.validate.enabled": false,
+    "markdownlint.run": "onSave",
+    "notebook.diff.ignoreMetadata": true,
+    "notebook.diff.ignoreOutputs": true,
+    "notebook.lineNumbers": "on",
+    "notebook.output.textLineLimit": 300,
+    "python.analysis.autoImportCompletions": true,
+    "python.analysis.autoSearchPaths": true,
+    "python.analysis.diagnosticMode": "openFilesOnly",
+    "python.analysis.ignore": [
+        ".git/**",
+        ".nox/**",
+        "**/__pycache__",
+        "**/.nox-*",
+        "**/node_modules",
+        "**/site-packages/**",
+        "dist/**"
+    ],
+    "python.analysis.indexing": true,
+    // Ensure Pylance caches indices to speed restarts
+    "python.analysis.persistAllIndices": true,
+    "python.analysis.typeCheckingMode": "off",
+    "python.analysis.userFileIndexingLimit": -1,
+    "python.defaultInterpreterPath": "python",
+    "python.languageServer": "Pylance",
+    "python.terminal.activateEnvInCurrentTerminal": true,
+    "python.terminal.activateEnvironment": true,
+    "python.testing.pytestEnabled": true,
+    "python.testing.unittestEnabled": false,
+    "ruff.importStrategy": "fromEnvironment",
+    "scm.defaultViewSortKey": "status",
+    "task.quickOpen.showAll": true,
+    "terminal.integrated.enableMultiLinePasteWarning": "never",
+    "todo-tree.general.tags": [
+        "BUG",
+        "HACK",
+        "FIXME",
+        "TODO",
+        "TOEDIT",
+        "WARNING"
+    ],
+    "todo-tree.highlights.customHighlight": {
+        "TODO": {
+            "icon": "check",
+            "type": "line"
+        },
+        "TOEDIT": {
+            "background": "#FF8C00",
+            "fontWeight": "bolder",
+            "foreground": "#FFFFFF",
+            "gutterIcon": true,
+            "icon": "$(edit)",
+            "iconColour": "#FF8C00"
+        }
+    },
+    "workbench.iconTheme": "material-icon-theme",
+    "workbench.startupEditor": "none"
+}

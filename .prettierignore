@@ -1,0 +1,8 @@
+venv/
+.venv/
+dist/
+node_modules/
+build/
+__pycache__/
+.packages/
+*.lock

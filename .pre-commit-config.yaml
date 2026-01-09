@@ -1,0 +1,50 @@
+ci:
+  autoupdate_commit_msg: "chore: update pre-commit hooks"
+  autofix_commit_msg: "style: pre-commit fixes"
+
+repos:
+# Standard hooks
+
+# Not yet implemented in prek
+# - repo: https://github.com/deshaw/nbstripout-fast
+#   rev: v1.1.1
+#   hooks:
+#     - id: nbstripout-fast
+#       types: [jupyter]
+
+- repo: https://github.com/mwouts/jupytext
+  rev: v1.18.1  # pin to a tested version
+  hooks:
+    - id: jupytext
+      args: [--sync]    # ensures the paired file is updated on commit
+      files: \.(ipynb|py)$
+
+
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v6.0.0
+  hooks:
+  - id: check-added-large-files
+    args: ['--maxkb=1024', '--enforce-all']
+    # Allow large lock files for APPLICATION projects (not libraries)
+    # uv.lock can be 500KB-1MB with many dependencies (normal for apps)
+    # This is REQUIRED for reproducibility and ISO 17025 compliance
+    exclude: '^(uv\.lock|poetry\.lock|package-lock\.json|yarn\.lock|.*\.ipynb)$'
+  - id: check-case-conflict
+  - id: check-merge-conflict
+  - id: check-symlinks
+  - id: check-yaml
+    exclude: ^conda\.recipe/meta\.yaml$
+  - id: debug-statements
+  - id: end-of-file-fixer
+  - id: mixed-line-ending
+  - id: requirements-txt-fixer
+  - id: trailing-whitespace
+
+# Check linting and style issues
+- repo: https://github.com/astral-sh/ruff-pre-commit
+  rev: "v0.14.3"
+  hooks:
+    - id: ruff
+      args: ["--fix", "--show-fixes"]
+    - id: ruff-format
+      exclude: ^(docs)

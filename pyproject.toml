@@ -1,0 +1,52 @@
+[project]
+name = "ews-gis-assets"
+version = "v20260109"
+description = "Download and manage GIS assets from EWS Consulting"
+readme = "README.md"
+authors = [{ name = "Fabien Farella", email = "f.farella@ews-consulting.com" }]
+license = { text = "MIT" }
+keywords = ["ews"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.12",
+]
+
+requires-python = ">=3.12"
+dependencies = [
+    "geopandas[all]>=1.1.1",
+    "numpy>=2,<3",
+    "requests>=2.32.5",
+    "tabulate>=0.9.0",
+]
+
+[project.optional-dependencies]
+
+[project.scripts]
+ews-gis-assets = "ews_gis_assets._version:show_version"
+
+[dependency-groups]
+lint = ["ruff>=0.12.10", "nbstripout-fast>=1.1.1", "pre-commit>=4.3.0"]
+test = ["pytest", "pytest-cov", "pytest-xdist"]
+notebook = ["ipykernel"]
+dev = [
+    { include-group = "test" },
+    { include-group = "notebook" },
+    { include-group = "lint" },
+]
+
+[build-system]
+requires = ["uv_build>=0.9.2,<0.10.0"]
+build-backend = "uv_build"
+
+[tool.uv]
+default-groups = ["dev"]
+environments = [
+    "sys_platform == 'linux' and platform_machine == 'x86_64' and python_version >= '3.12' and python_version < '3.14'",
+]
+
+[tool.ruff.lint.pycodestyle]
+max-doc-length = 100
