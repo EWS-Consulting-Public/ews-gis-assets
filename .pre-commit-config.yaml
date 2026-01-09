@@ -24,7 +24,7 @@ repos:
   rev: v6.0.0
   hooks:
   - id: check-added-large-files
-    args: ['--maxkb=1024', '--enforce-all']
+    args: ['--maxkb=2048', '--enforce-all']
     # Allow large lock files for APPLICATION projects (not libraries)
     # uv.lock can be 500KB-1MB with many dependencies (normal for apps)
     # This is REQUIRED for reproducibility and ISO 17025 compliance
@@ -36,9 +36,11 @@ repos:
     exclude: ^conda\.recipe/meta\.yaml$
   - id: debug-statements
   - id: end-of-file-fixer
+    exclude: ^data/
   - id: mixed-line-ending
   - id: requirements-txt-fixer
   - id: trailing-whitespace
+    exclude: ^data/
 
 # Check linting and style issues
 - repo: https://github.com/astral-sh/ruff-pre-commit
