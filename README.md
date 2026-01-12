@@ -38,7 +38,7 @@ Data is provided in **GeoJSON** and **GeoPackage (GPKG)** formats.
 
 ## 🔄 How It Works
 
-1. **Automated Downloads**: A scheduled GitHub Action runs daily to fetch the latest data from source APIs
+1. **Automated Downloads**: A [scheduled GitHub Action](https://github.com/EWS-Consulting-Public/ews-gis-assets/actions/workflows/update.yaml) runs daily to fetch the latest data from source APIs
 2. **Smart Updates**: Uses content hashing (via pandas) to detect actual data changes, ignoring metadata
 3. **Multi-Format Export**: Automatically converts and saves data in multiple GIS formats (GeoJSON, GPKG)
 4. **Version Control**: Only commits when actual data changes are detected, keeping the repository clean
