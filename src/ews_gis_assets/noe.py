@@ -112,9 +112,14 @@ def download_noe_geojson() -> gpd.GeoDataFrame | None:
     key = gdf[key_cols].apply(tuple, axis=1)
     duplicates = key[key.duplicated(keep=False)]
     if not duplicates.empty:
+        print(f"Size before removing duplicates: {len(gdf)}")
         print("Duplicated key values found:")
         print(duplicates)
-        raise ValueError("Duplicated key values found.")
+        # Only keep the first occurrence of each duplicated key
+        key = key.drop_duplicates(keep="first")
+        gdf = gdf.loc[key.index]
+        print(f"Size after removing duplicates: {len(gdf)}")
+        # raise ValueError("Duplicated key values found.")
 
     # We need to sort in a defined order to have consistent output
     gdf = gdf.sort_values(by=["Vorhaben", "Name der WKA"]).reset_index(drop=True)
