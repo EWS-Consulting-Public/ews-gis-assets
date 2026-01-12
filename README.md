@@ -30,6 +30,12 @@ Aviation obstacle data for wind turbines across Austria from [Austro Control](ht
 
 **Attributes**: Name, Wind Farm, Status (Operating/UnderConstruction/Plan/Approved), Elevation, Height, Geographic coordinates, Accuracy metrics
 
+## 📋 Available Formats
+
+Data is provided in **GeoJSON** and **GeoPackage (GPKG)** formats.
+
+> **Note:** KMZ/KML formats are not exported due to large file sizes and limited attribute support. For Google Earth visualization, we recommend using **QGIS** to load the GPKG files and export to KMZ with custom styling and filtered attributes as needed.
+
 ## 🔄 How It Works
 
 1. **Automated Downloads**: A scheduled GitHub Action runs daily to fetch the latest data from source APIs
