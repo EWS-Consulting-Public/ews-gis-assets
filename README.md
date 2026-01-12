@@ -17,6 +17,19 @@ Daily updated dataset of wind turbine locations in Lower Austria from the [NÖ A
 
 **Update Frequency**: Daily at midnight UTC (via GitHub Actions)
 
+### Austro Control ICAO Obstacle Dataset (Wind Turbines - Austria)
+
+Aviation obstacle data for wind turbines across Austria from [Austro Control](https://www.austrocontrol.at/piloten/vor_dem_flug/aim_produkte/hindernisdatensaetze_icao). Includes operational, under construction, and planned wind turbines.
+
+**Download Links:**
+
+- **GeoJSON**: [`https://raw.githubusercontent.com/EWS-Consulting-Public/ews-gis-assets/main/data/austro_control_icao.geojson`](https://raw.githubusercontent.com/EWS-Consulting-Public/ews-gis-assets/main/data/austro_control_icao.geojson)
+- **GeoPackage (GPKG)**: [`https://raw.githubusercontent.com/EWS-Consulting-Public/ews-gis-assets/main/data/austro_control_icao.gpkg`](https://raw.githubusercontent.com/EWS-Consulting-Public/ews-gis-assets/main/data/austro_control_icao.gpkg)
+
+**Update Frequency**: Daily at midnight UTC (via GitHub Actions)
+
+**Attributes**: Name, Wind Farm, Status (Operating/UnderConstruction/Plan/Approved), Elevation, Height, Geographic coordinates, Accuracy metrics
+
 ## 🔄 How It Works
 
 1. **Automated Downloads**: A scheduled GitHub Action runs daily to fetch the latest data from source APIs
