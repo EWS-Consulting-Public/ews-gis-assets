@@ -50,3 +50,14 @@ repos:
       args: ["--fix", "--show-fixes"]
     - id: ruff-format
       exclude: ^(docs)
+
+# .claude/ is generated from .cursor/ - fail if it drifts. Hand-mirroring
+# these trees demonstrably rots; see rule agent-config-sync.
+- repo: local
+  hooks:
+    - id: sync-agent-config
+      name: agent config (.claude generated from .cursor)
+      entry: uv run python scripts/sync_agent_config.py --check
+      language: system
+      files: ^\.(cursor|claude)/|^scripts/sync_agent_config\.py$
+      pass_filenames: false

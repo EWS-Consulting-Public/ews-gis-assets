@@ -121,7 +121,7 @@
     "python.analysis.typeCheckingMode": "off",
     "python.analysis.userFileIndexingLimit": -1,
     "python.defaultInterpreterPath": "python",
-    "python.languageServer": "Pylance",
+    "python.languageServer": "None",
     "python.terminal.activateEnvInCurrentTerminal": true,
     "python.terminal.activateEnvironment": true,
     "python.testing.pytestEnabled": true,

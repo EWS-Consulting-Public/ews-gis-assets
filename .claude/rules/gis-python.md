@@ -1,0 +1,56 @@
+<!-- GENERATED FROM .cursor/rules/gis-python.mdc BY scripts/sync_agent_config.py.
+     Edit the .cursor source, then run: uv run python scripts/sync_agent_config.py -->
+
+**Applies to:** `**/*.py`
+
+Skip this rule if your change does not touch those paths.
+
+# Python style (ews-gis-assets)
+
+Fabien is a wind engineer with deep domain expertise and no CS background, and
+he is the only person who can deep-dive this code. **Code only a strong
+software engineer could maintain is a liability here, not a quality signal.**
+Being clever means finding the simplest structure that is actually correct.
+
+Provenance for that framing:
+`fabien-context` → `docs/practice/writing-code.md` (orientation); this rule is
+the project-specific cut.
+
+## How much rigor a file deserves
+
+| Zone | Here | Standard |
+|---|---|---|
+| Core infrastructure | `helpers.py` hashing, CRS / schema cleanup in downloaders | Get it right — silent wrong hashes or CRS poison every consumer |
+| Domain logic | `noe.py`, `austro_control.py` | Simple functions with clear defaults, not class hierarchies |
+| One-off | root `download_*.py`, notebooks | Works? Ship it. No abstraction. |
+
+**Red flags — do not do these unless asked:** an abstract base class "for
+future extensibility", a factory or strategy pattern "in case we need it
+later", defensive handling for an edge case that cannot happen. Rule of thumb:
+**three real implementations needed right now** justifies a base class.
+
+## The specifics
+
+- **Fail fast over defensive `try`/`except`.** A swallowed download error that
+  returns `None` and then gets ignored leaves stale `data/` looking fresh.
+  Where the existing downloaders return `None` on network failure, the CLI
+  entry points must raise (they already do) — keep that split.
+- **Absolute imports only** (`from ews_gis_assets.helpers import …`).
+- **`from __future__ import annotations`** at the top of every module.
+- **Content hashing is the update gate.** Prefer
+  `pd.util.hash_pandas_object` on the GeoDataFrame (see `helpers.py`) over
+  raw file bytes for GPKG/GeoJSON so metadata noise does not force a commit.
+  Do not invent a second hash scheme beside the helpers.
+- **No new runtime dependency without a reason you can state.** GeoPandas /
+  requests / BeautifulSoup are load-bearing; a new one needs a consumer.
+
+## Docstrings say *why*, not *what*
+
+Record the decision a reader cannot recover from the signature — why a column
+is dropped, why ICAO status values are normalised, why KMZ is refused. A
+docstring that restates the signature is noise.
+
+## Tests
+
+`uv run pytest` when a suite exists. Prefer a regression that catches a wrong
+CRS, a dropped attribute, or a hash false-positive over a pure smoke test.

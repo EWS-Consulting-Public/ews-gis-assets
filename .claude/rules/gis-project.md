@@ -1,0 +1,73 @@
+<!-- GENERATED FROM .cursor/rules/gis-project.mdc BY scripts/sync_agent_config.py.
+     Edit the .cursor source, then run: uv run python scripts/sync_agent_config.py -->
+
+**Applies to:** always - this rule is in force for every change.
+
+# ews-gis-assets: the boundaries
+
+A public publisher of Austrian wind-turbine GIS datasets. Consumer docs live in
+[`README.md`](../../README.md); this rule is the set of boundaries that hold for
+every change.
+
+## 1. This repo is public — privacy does not bend
+
+**Client names, `F:\` paths, internal host names and private estate details
+never land in this repo.** Not in Python, not in a notebook, not in a commit
+message, not in a scratch file that later gets committed.
+
+`fabien-context` and the `mb-*` boards are private *by design* because they
+name clients and DFS layouts. Facts about public Austrian open data may live
+here. Evidence from a client project does not.
+
+If you cannot state a change without naming a project or an internal path,
+**the change is not ready for this repo** — say so rather than paraphrasing.
+
+## 2. `data/` is machine-written
+
+Published GeoJSON / GPKG / `.hash` files under `data/` are produced by the
+download scripts and the daily Action. **Do not hand-edit them** to "fix" a
+geometry or attribute. Fix the downloader / cleaner, re-run, let the hash
+decide whether a commit is warranted.
+
+KMZ/KML are deliberately not exported (size + weak attributes) — see the
+README. Do not re-open that without a measured consumer need.
+
+## 3. The two download entry points
+
+| Script | Dataset | Package module |
+|---|---|---|
+| `uv run download_noe_wind_turbines.py` | NÖ Atlas wind turbines | `ews_gis_assets.noe` |
+| `uv run download_austro_control.py` | Austro Control ICAO obstacles (WTG) | `ews_gis_assets.austro_control` |
+
+The Action runs both nightly (`update.yaml`). Local runs write under `data/`;
+only commit when the content hash says the frame changed.
+
+## 4. Commands — uv only
+
+No bare `python` on Windows (Store stub). Prefer:
+
+```bash
+uv sync --locked --all-extras --dev
+uv run download_noe_wind_turbines.py
+uv run download_austro_control.py
+uv run ruff check --fix
+uv run pytest                          # when tests exist
+uv run python scripts/sync_agent_config.py
+uv run python scripts/sync_agent_config.py --check
+```
+
+`prek` / `make format` for hooks. Discover Makefile targets with `make help`.
+
+## 5. Committing
+
+- Only when Fabien asks.
+- Do not stage secrets, OneDrive conflict copies, or unrelated `.vscode` edits
+  you did not make for this task.
+- Automated data commits use the Action's message shape
+  (`chore: update GIS asset files (automated)`); human commits describe *why*.
+
+## 6. Agent config
+
+Author under `.cursor/`. Never edit `.claude/` by hand — see rule
+`agent-config-sync`. GitHub Copilot instruction files are retired; do not
+reintroduce `.github/copilot-instructions.md` or `.github/instructions/`.
