@@ -6,31 +6,35 @@ This repository automatically downloads and publishes geospatial datasets from v
 
 ## Available Datasets
 
-Prefer the **latest release** URLs (stable CDN). `raw.githubusercontent.com/.../main/data/...` also works after each commit.
+Prefer the **latest release** URLs (stable CDN) for downloads. GeoJSON also has a
+**map preview** on GitHub (`blob/main/data/…`) — that opens the rendered map in
+the browser instead of downloading the file.
 
-Base: `https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/`
+Release base: `https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/`
 
-| Dataset | Latest GeoJSON | Latest GPKG |
+| Dataset | GeoJSON (download · map) | GPKG |
 | --- | --- | --- |
-| NÖ wind turbines | [`windkraftanlagen.geojson`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/windkraftanlagen.geojson) | [`windkraftanlagen.gpkg`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/windkraftanlagen.gpkg) |
-| Austro Control ICAO (WTG, Austria) | [`austro_control_icao.geojson`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/austro_control_icao.geojson) | [`austro_control_icao.gpkg`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/austro_control_icao.gpkg) |
-| NÖ Windkraftzonen §20 ROG | [`noe_wind_zones.geojson`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/noe_wind_zones.geojson) | [`noe_wind_zones.gpkg`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/noe_wind_zones.gpkg) |
-| NÖ PV-Zonen §20 ROG | [`noe_pv_zones.geojson`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/noe_pv_zones.geojson) | [`noe_pv_zones.gpkg`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/noe_pv_zones.gpkg) |
-| Steiermark SAPRO Windenergie Zone | [`styria_sapro_wind.geojson`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/styria_sapro_wind.geojson) | [`styria_sapro_wind.gpkg`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/styria_sapro_wind.gpkg) |
-| OÖ Windkraftmasterplan Ausschlusszone | [`ooe_wind_exclusion.geojson`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/ooe_wind_exclusion.geojson) | [`ooe_wind_exclusion.gpkg`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/ooe_wind_exclusion.gpkg) |
+| NÖ wind turbines | [`download`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/windkraftanlagen.geojson) · [![map](https://github.githubassets.com/favicons/favicon.svg)](https://github.com/EWS-Consulting-Public/ews-gis-assets/blob/main/data/windkraftanlagen.geojson) | [`windkraftanlagen.gpkg`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/windkraftanlagen.gpkg) |
+| Austro Control ICAO (WTG, Austria) | [`download`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/austro_control_icao.geojson) · [![map](https://github.githubassets.com/favicons/favicon.svg)](https://github.com/EWS-Consulting-Public/ews-gis-assets/blob/main/data/austro_control_icao.geojson) | [`austro_control_icao.gpkg`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/austro_control_icao.gpkg) |
+| NÖ Windkraftzonen §20 ROG | [`download`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/noe_wind_zones.geojson) · [![map](https://github.githubassets.com/favicons/favicon.svg)](https://github.com/EWS-Consulting-Public/ews-gis-assets/blob/main/data/noe_wind_zones.geojson) | [`noe_wind_zones.gpkg`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/noe_wind_zones.gpkg) |
+| NÖ PV-Zonen §20 ROG | [`download`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/noe_pv_zones.geojson) · [![map](https://github.githubassets.com/favicons/favicon.svg)](https://github.com/EWS-Consulting-Public/ews-gis-assets/blob/main/data/noe_pv_zones.geojson) | [`noe_pv_zones.gpkg`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/noe_pv_zones.gpkg) |
+| Steiermark SAPRO Windenergie Zone | [`download`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/styria_sapro_wind.geojson) · [![map](https://github.githubassets.com/favicons/favicon.svg)](https://github.com/EWS-Consulting-Public/ews-gis-assets/blob/main/data/styria_sapro_wind.geojson) | [`styria_sapro_wind.gpkg`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/styria_sapro_wind.gpkg) |
+| OÖ Windkraftmasterplan Ausschlusszone | [`download`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/ooe_wind_exclusion.geojson) · [![map](https://github.githubassets.com/favicons/favicon.svg)](https://github.com/EWS-Consulting-Public/ews-gis-assets/blob/main/data/ooe_wind_exclusion.geojson) | [`ooe_wind_exclusion.gpkg`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/ooe_wind_exclusion.gpkg) |
+
+> The GitHub map preview may skip very large GeoJSON files (OÖ exclusion is ~23 MB). Use the GPKG / QGIS path in that case.
 
 ### Windkraftanlagen Niederösterreich (Wind Turbines in Lower Austria)
 
 Daily updated point dataset from the [NÖ Atlas](https://atlas.noe.gv.at/).
 
-- **GeoJSON**: [`windkraftanlagen.geojson`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/windkraftanlagen.geojson)
+- **GeoJSON**: [`download`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/windkraftanlagen.geojson) · [![map](https://github.githubassets.com/favicons/favicon.svg)](https://github.com/EWS-Consulting-Public/ews-gis-assets/blob/main/data/windkraftanlagen.geojson)
 - **GeoPackage**: [`windkraftanlagen.gpkg`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/windkraftanlagen.gpkg)
 
 ### Austro Control ICAO Obstacle Dataset (Wind Turbines - Austria)
 
 Aviation obstacle data for wind turbines across Austria from [Austro Control](https://www.austrocontrol.at/piloten/vor_dem_flug/aim_produkte/hindernisdatensaetze_icao). Includes operational, under construction, and planned wind turbines.
 
-- **GeoJSON**: [`austro_control_icao.geojson`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/austro_control_icao.geojson)
+- **GeoJSON**: [`download`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/austro_control_icao.geojson) · [![map](https://github.githubassets.com/favicons/favicon.svg)](https://github.com/EWS-Consulting-Public/ews-gis-assets/blob/main/data/austro_control_icao.geojson)
 - **GeoPackage**: [`austro_control_icao.gpkg`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/austro_control_icao.gpkg)
 
 Typically updates ~monthly when Austro Control publishes a new package.
@@ -41,29 +45,30 @@ Typically updates ~monthly when Austro Control publishes a new package.
 
 Planning zones where municipalities may designate Grünland–Windkraftanlage (Gwka). Source: [NÖ OGD](https://www.noe.gv.at/noe/OGD_Detailseite.html?id=2df95d9f-5914-4ec5-a21c-c0f06c9a151e) / GeoServer WFS.
 
-- **GeoJSON**: [`noe_wind_zones.geojson`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/noe_wind_zones.geojson)
+- **GeoJSON**: [`download`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/noe_wind_zones.geojson) · [![map](https://github.githubassets.com/favicons/favicon.svg)](https://github.com/EWS-Consulting-Public/ews-gis-assets/blob/main/data/noe_wind_zones.geojson)
 - **GeoPackage**: [`noe_wind_zones.gpkg`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/noe_wind_zones.gpkg)
 
 ### NÖ PV-Zonen im Grünland (§20 ROG)
 
 Freiflächen-PV planning zones. Same NÖ GeoServer OGD family.
 
-- **GeoJSON**: [`noe_pv_zones.geojson`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/noe_pv_zones.geojson)
+- **GeoJSON**: [`download`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/noe_pv_zones.geojson) · [![map](https://github.githubassets.com/favicons/favicon.svg)](https://github.com/EWS-Consulting-Public/ews-gis-assets/blob/main/data/noe_pv_zones.geojson)
 - **GeoPackage**: [`noe_pv_zones.gpkg`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/noe_pv_zones.gpkg)
 
 ### Steiermark SAPRO Windenergie Zone
 
 Vorrangzonen from the Styrian Sachprogramm Windenergie (INSPIRE WFS).
 
-- **GeoJSON**: [`styria_sapro_wind.geojson`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/styria_sapro_wind.geojson)
+- **GeoJSON**: [`download`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/styria_sapro_wind.geojson) · [![map](https://github.githubassets.com/favicons/favicon.svg)](https://github.com/EWS-Consulting-Public/ews-gis-assets/blob/main/data/styria_sapro_wind.geojson)
 - **GeoPackage**: [`styria_sapro_wind.gpkg`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/styria_sapro_wind.gpkg)
 
 ### OÖ Windkraftmasterplan Ausschlusszone
 
 Upper Austria exclusion zone from DORIS (shapefile zip).
 
-- **GeoJSON**: [`ooe_wind_exclusion.geojson`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/ooe_wind_exclusion.geojson)
+- **GeoJSON**: [`download`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/ooe_wind_exclusion.geojson) · [![map](https://github.githubassets.com/favicons/favicon.svg)](https://github.com/EWS-Consulting-Public/ews-gis-assets/blob/main/data/ooe_wind_exclusion.geojson)
 - **GeoPackage**: [`ooe_wind_exclusion.gpkg`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/ooe_wind_exclusion.gpkg)
+
 
 ## Available Formats
 
