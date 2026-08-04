@@ -32,15 +32,22 @@ decide whether a commit is warranted.
 KMZ/KML are deliberately not exported (size + weak attributes) — see the
 README. Do not re-open that without a measured consumer need.
 
-## 3. The two download entry points
+## 3. Download entry points
 
 | Script | Dataset | Package module |
 |---|---|---|
 | `uv run download_noe_wind_turbines.py` | NÖ Atlas wind turbines | `ews_gis_assets.noe` |
 | `uv run download_austro_control.py` | Austro Control ICAO obstacles (WTG) | `ews_gis_assets.austro_control` |
+| `uv run download_noe_wind_zones.py` | NÖ Windkraftzonen §20 ROG | `ews_gis_assets.zones` |
+| `uv run download_noe_pv_zones.py` | NÖ PV-Zonen §20 ROG | `ews_gis_assets.zones` |
+| `uv run download_styria_sapro_wind.py` | Steiermark SAPRO Windenergie Zone | `ews_gis_assets.zones` |
+| `uv run download_ooe_wind_exclusion.py` | OÖ Windkraftmasterplan Ausschlusszone | `ews_gis_assets.zones` |
 
-The Action runs both nightly (`update.yaml`). Local runs write under `data/`;
+The Action runs all nightly (`update.yaml`). Local runs write under `data/`;
 only commit when the content hash says the frame changed.
+
+Burgenland Windkraft-Eignungszonen are listed as OGD but the distribution URL
+is intranet-only (`intranet.burgenland.at`) — not crawlable from public CI.
 
 ## 4. Commands — uv only
 
@@ -50,6 +57,10 @@ No bare `python` on Windows (Store stub). Prefer:
 uv sync --locked --all-extras --dev
 uv run download_noe_wind_turbines.py
 uv run download_austro_control.py
+uv run download_noe_wind_zones.py
+uv run download_noe_pv_zones.py
+uv run download_styria_sapro_wind.py
+uv run download_ooe_wind_exclusion.py
 uv run ruff check --fix
 uv run pytest                          # when tests exist
 uv run python scripts/sync_agent_config.py

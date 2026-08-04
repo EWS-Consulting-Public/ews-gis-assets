@@ -39,10 +39,15 @@ another repo in this estate.
 src/ews_gis_assets/
   noe.py                 NÖ Atlas wind-turbine download + clean
   austro_control.py      Austro Control ICAO obstacle scrape + parse
+  zones.py               NÖ / Styria / OÖ planning-zone downloaders
   helpers.py             content hashing / "did data change?"
   constants.py           upstream URLs
-download_noe_wind_turbines.py   CLI entry for the NÖ dataset
+download_noe_wind_turbines.py   CLI entry for the NÖ WTG dataset
 download_austro_control.py      CLI entry for the Austro Control dataset
+download_noe_wind_zones.py      CLI entry for NÖ wind zones
+download_noe_pv_zones.py        CLI entry for NÖ PV zones
+download_styria_sapro_wind.py   CLI entry for Styria SAPRO wind zones
+download_ooe_wind_exclusion.py  CLI entry for OÖ exclusion zone
 data/                    published GeoJSON + GPKG + .hash sidecars (CI-owned)
 .github/workflows/update.yaml   daily midnight UTC refresh
 .cursor/                 authored rules (+ skills when any earn a place)

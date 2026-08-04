@@ -31,6 +31,10 @@ jobs:
         run: |
           uv run download_noe_wind_turbines.py
           uv run download_austro_control.py
+          uv run download_noe_wind_zones.py
+          uv run download_noe_pv_zones.py
+          uv run download_styria_sapro_wind.py
+          uv run download_ooe_wind_exclusion.py
 
       - name: Check for changes
         id: check_changes
@@ -63,9 +67,17 @@ jobs:
             data/windkraftanlagen.gpkg
             data/austro_control_icao.geojson
             data/austro_control_icao.gpkg
+            data/noe_wind_zones.geojson
+            data/noe_wind_zones.gpkg
+            data/noe_pv_zones.geojson
+            data/noe_pv_zones.gpkg
+            data/styria_sapro_wind.geojson
+            data/styria_sapro_wind.gpkg
+            data/ooe_wind_exclusion.geojson
+            data/ooe_wind_exclusion.gpkg
           )
           CHANGED="$(git diff --name-only HEAD~1 HEAD -- data/ || true)"
-          NOTES="$(printf 'Automated GIS asset release.\n\nChanged paths:\n```\n%s\n```\n\nStable URLs:\n- https://github.com/%s/releases/latest/download/windkraftanlagen.geojson\n- https://github.com/%s/releases/latest/download/austro_control_icao.geojson\n' "$CHANGED" "${{ github.repository }}" "${{ github.repository }}")"
+          NOTES="$(printf 'Automated GIS asset release.\n\nChanged paths:\n```\n%s\n```\n\nStable URLs:\n- https://github.com/%s/releases/latest/download/windkraftanlagen.geojson\n- https://github.com/%s/releases/latest/download/austro_control_icao.geojson\n- https://github.com/%s/releases/latest/download/noe_wind_zones.geojson\n' "$CHANGED" "${{ github.repository }}" "${{ github.repository }}" "${{ github.repository }}")"
           gh release create "$TAG" "${ASSETS[@]}" \
             --title "GIS assets ${TAG}" \
             --notes "$NOTES" \

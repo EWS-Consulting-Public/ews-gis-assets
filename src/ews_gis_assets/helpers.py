@@ -80,6 +80,34 @@ def is_data_updated(gdf: gpd.GeoDataFrame, hash_file: Path) -> bool:
     return True
 
 
+def publish_dataset(gdf: gpd.GeoDataFrame, output_dir: Path, file_name: str) -> bool:
+    """Hash-gate then write GeoJSON + GPKG. Returns True when files were written."""
+    output_dir = Path(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    hash_file = output_dir / f"{file_name}.hash"
+
+    if not is_data_updated(gdf, hash_file):
+        print("No changes detected. Exiting without saving files.")
+        return False
+
+    for suffix, driver in ((".geojson", "GeoJSON"), (".gpkg", "GPKG")):
+        file_path = output_dir / f"{file_name}{suffix}"
+        gdf.to_file(file_path, driver=driver)
+        print(f"Saved {driver} file: {file_path}")
+
+    print("Changes detected. Files updated and can be pushed to the repository.")
+    return True
+
+
+def to_wgs84(gdf: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
+    """Reproject to EPSG:4326 when needed — published assets stay on one CRS."""
+    if gdf.crs is None:
+        raise ValueError("GeoDataFrame has no CRS; cannot publish.")
+    if gdf.crs.to_epsg() != 4326:
+        gdf = gdf.to_crs(epsg=4326)
+    return gdf
+
+
 def is_file_updated(new_file: Path) -> bool:
     """Check if the downloaded file differs from the previous version."""
     file_extension = new_file.suffix.lstrip(".").upper()

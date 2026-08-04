@@ -21,7 +21,7 @@ the project-specific cut.
 | Zone | Here | Standard |
 |---|---|---|
 | Core infrastructure | `helpers.py` hashing, CRS / schema cleanup in downloaders | Get it right — silent wrong hashes or CRS poison every consumer |
-| Domain logic | `noe.py`, `austro_control.py` | Simple functions with clear defaults, not class hierarchies |
+| Domain logic | `noe.py`, `austro_control.py`, `zones.py` | Simple functions with clear defaults, not class hierarchies |
 | One-off | root `download_*.py`, notebooks | Works? Ship it. No abstraction. |
 
 **Red flags — do not do these unless asked:** an abstract base class "for
