@@ -35,10 +35,10 @@ jobs:
       - name: Check for changes
         id: check_changes
         run: |
-          if [ "$(git status --porcelain)" != "" ]; then
-            echo "changes=true" >> $GITHUB_OUTPUT
+          if [ "$(git status --porcelain data/)" != "" ]; then
+            echo "changes=true" >> "$GITHUB_OUTPUT"
           else
-            echo "changes=false" >> $GITHUB_OUTPUT
+            echo "changes=false" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Commit and push changes
@@ -49,3 +49,25 @@ jobs:
           git add data/
           git commit -m "chore: update GIS asset files (automated)"
           git push
+
+      - name: Create GitHub Release
+        if: steps.check_changes.outputs.changes == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          TAG="data-$(date -u +%Y.%m.%d-%H%M%S)"
+          # Always attach the full consumer asset set so /releases/latest/download/<name> stays valid.
+          ASSETS=(
+            data/windkraftanlagen.geojson
+            data/windkraftanlagen.gpkg
+            data/austro_control_icao.geojson
+            data/austro_control_icao.gpkg
+          )
+          CHANGED="$(git diff --name-only HEAD~1 HEAD -- data/ || true)"
+          NOTES="$(printf 'Automated GIS asset release.\n\nChanged paths:\n```\n%s\n```\n\nStable URLs:\n- https://github.com/%s/releases/latest/download/windkraftanlagen.geojson\n- https://github.com/%s/releases/latest/download/austro_control_icao.geojson\n' "$CHANGED" "${{ github.repository }}" "${{ github.repository }}")"
+          gh release create "$TAG" "${ASSETS[@]}" \
+            --title "GIS assets ${TAG}" \
+            --notes "$NOTES" \
+            --latest
+          echo "Created https://github.com/${{ github.repository }}/releases/tag/${TAG}"
