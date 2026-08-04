@@ -10,10 +10,12 @@ import pandas as pd
 import requests
 
 from ews_gis_assets.constants import (
+    KTN_RED_III_WIND_ZIP,
     NOE_PV_ZONES_LAYER,
     NOE_WFS_GEOJSON,
     NOE_WIND_ZONES_LAYER,
     OOE_WIND_EXCLUSION_ZIP,
+    STYRIA_SAPRO_BEREICH_ZIP,
     STYRIA_SAPRO_WIND_WFS,
 )
 from ews_gis_assets.helpers import to_wgs84
@@ -25,6 +27,22 @@ def _fetch_geojson(url: str) -> gpd.GeoDataFrame:
     gdf = gpd.read_file(io.BytesIO(resp.content))
     if gdf.empty:
         raise RuntimeError(f"Empty GeoJSON from {url}")
+    return gdf
+
+
+def _read_shapefile_zip(url: str) -> gpd.GeoDataFrame:
+    """Download a zip that contains exactly one .shp (+ siblings) and read it."""
+    resp = requests.get(url, timeout=180)
+    resp.raise_for_status()
+    with zipfile.ZipFile(io.BytesIO(resp.content)) as zf:
+        names = [n for n in zf.namelist() if n.lower().endswith(".shp")]
+        if len(names) != 1:
+            raise RuntimeError(f"Expected one .shp in {url}, found: {names}")
+        with tempfile.TemporaryDirectory() as tmp:
+            zf.extractall(tmp)
+            gdf = gpd.read_file(Path(tmp) / names[0])
+    if gdf.empty:
+        raise RuntimeError(f"Empty shapefile from {url}")
     return gdf
 
 
@@ -120,19 +138,32 @@ def download_styria_sapro_wind() -> gpd.GeoDataFrame:
     return gdf.sort_values("local_id").reset_index(drop=True)
 
 
+def download_styria_sapro_bereich() -> gpd.GeoDataFrame:
+    """Steiermark SAPRO Windenergie Bereich — plan Geltungsbereich extent."""
+    gdf = _read_shapefile_zip(STYRIA_SAPRO_BEREICH_ZIP)
+    gdf = to_wgs84(gdf)
+
+    rename = {
+        "OBJECTID": "object_id",
+        "Name": "name",
+        "Shape_Leng": "shape_length",
+        "Shape_Area": "shape_area",
+    }
+    missing = [c for c in rename if c not in gdf.columns]
+    if missing:
+        raise ValueError(f"Unexpected Styria SAPRO Bereich schema, missing: {missing}")
+
+    gdf = gdf[[*rename.keys(), "geometry"]].rename(columns=rename)
+    gdf["object_id"] = gdf["object_id"].astype("int64")
+    gdf["name"] = gdf["name"].astype("string").str.strip()
+    gdf["shape_length"] = pd.to_numeric(gdf["shape_length"], errors="raise")
+    gdf["shape_area"] = pd.to_numeric(gdf["shape_area"], errors="raise")
+    return gdf.sort_values("object_id").reset_index(drop=True)
+
+
 def download_ooe_wind_exclusion() -> gpd.GeoDataFrame:
     """OÖ Windkraftmasterplan Ausschlusszone — DORIS shapefile (one multipolygon)."""
-    resp = requests.get(OOE_WIND_EXCLUSION_ZIP, timeout=180)
-    resp.raise_for_status()
-
-    # Shapefile needs sibling .prj/.dbf — extract the zip, then read.
-    with zipfile.ZipFile(io.BytesIO(resp.content)) as zf:
-        names = [n for n in zf.namelist() if n.lower().endswith(".shp")]
-        if len(names) != 1:
-            raise RuntimeError(f"Expected one .shp in OÖ zip, found: {names}")
-        with tempfile.TemporaryDirectory() as tmp:
-            zf.extractall(tmp)
-            gdf = gpd.read_file(Path(tmp) / names[0])
+    gdf = _read_shapefile_zip(OOE_WIND_EXCLUSION_ZIP)
     gdf = to_wgs84(gdf)
 
     # DBF truncates names; rename to the INSPIRE meanings from the companion GML.
@@ -161,3 +192,24 @@ def download_ooe_wind_exclusion() -> gpd.GeoDataFrame:
         gdf[col] = gdf[col].astype("string").str.replace(r"\s+", " ", regex=True).str.strip()
     gdf["id"] = gdf["id"].astype("int64")
     return gdf.sort_values("inspire_id").reset_index(drop=True)
+
+
+def download_ktn_red_iii_wind() -> gpd.GeoDataFrame:
+    """Kärnten RED III Windkraft-Beschleunigungszonen — K-ROG / RED III polygons."""
+    gdf = _read_shapefile_zip(KTN_RED_III_WIND_ZIP)
+    gdf = to_wgs84(gdf)
+
+    rename = {
+        "ZONENBEZ": "zone_name",
+        "SHAPE_AREA": "shape_area",
+        "SHAPE_LEN": "shape_length",
+    }
+    missing = [c for c in rename if c not in gdf.columns]
+    if missing:
+        raise ValueError(f"Unexpected Kärnten RED III schema, missing: {missing}")
+
+    gdf = gdf[[*rename.keys(), "geometry"]].rename(columns=rename)
+    gdf["zone_name"] = gdf["zone_name"].astype("string").str.strip()
+    gdf["shape_area"] = pd.to_numeric(gdf["shape_area"], errors="raise").round(6)
+    gdf["shape_length"] = pd.to_numeric(gdf["shape_length"], errors="raise").round(6)
+    return gdf.sort_values("zone_name").reset_index(drop=True)

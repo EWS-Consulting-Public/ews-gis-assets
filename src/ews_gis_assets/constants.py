@@ -21,7 +21,17 @@ STYRIA_SAPRO_WIND_WFS = (
     "&outputFormat=application/json"
 )
 
+# Styria SAPRO Windenergie Bereich — plan extent shapefile (EPSG:4258).
+STYRIA_SAPRO_BEREICH_ZIP = (
+    "https://service.stmk.gv.at/ogd/OGD_Data_ABT17/geoinformation/SAPRO_Windenergie_bereich.zip"
+)
+
 # OÖ Windkraftmasterplan Ausschlusszone — DORIS shapefile zip (EPSG:31255).
 OOE_WIND_EXCLUSION_ZIP = (
     "https://e-gov.ooe.gv.at/at.gv.ooe.dorisdaten/DORIS_U/WINDKRAFT_AUSSCHLUSSZONE.zip"
+)
+
+# Kärnten RED III Windkraft-Beschleunigungszonen — OGD shapefile zip (EPSG:31258).
+KTN_RED_III_WIND_ZIP = (
+    "https://gis.ktn.gv.at/OGD/Geographie_Planung/RED_III_Windkraftbeschleunigungszone.zip"
 )

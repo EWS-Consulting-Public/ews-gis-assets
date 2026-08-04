@@ -19,7 +19,9 @@ Release base: `https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/
 | NÖ Windkraftzonen §20 ROG | [`download`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/noe_wind_zones.geojson) · [![map](https://github.githubassets.com/favicons/favicon.svg)](https://github.com/EWS-Consulting-Public/ews-gis-assets/blob/main/data/noe_wind_zones.geojson) | [`noe_wind_zones.gpkg`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/noe_wind_zones.gpkg) |
 | NÖ PV-Zonen §20 ROG | [`download`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/noe_pv_zones.geojson) · [![map](https://github.githubassets.com/favicons/favicon.svg)](https://github.com/EWS-Consulting-Public/ews-gis-assets/blob/main/data/noe_pv_zones.geojson) | [`noe_pv_zones.gpkg`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/noe_pv_zones.gpkg) |
 | Steiermark SAPRO Windenergie Zone | [`download`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/styria_sapro_wind.geojson) · [![map](https://github.githubassets.com/favicons/favicon.svg)](https://github.com/EWS-Consulting-Public/ews-gis-assets/blob/main/data/styria_sapro_wind.geojson) | [`styria_sapro_wind.gpkg`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/styria_sapro_wind.gpkg) |
+| Steiermark SAPRO Windenergie Bereich | [`download`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/styria_sapro_bereich.geojson) · [![map](https://github.githubassets.com/favicons/favicon.svg)](https://github.com/EWS-Consulting-Public/ews-gis-assets/blob/main/data/styria_sapro_bereich.geojson) | [`styria_sapro_bereich.gpkg`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/styria_sapro_bereich.gpkg) |
 | OÖ Windkraftmasterplan Ausschlusszone | [`download`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/ooe_wind_exclusion.geojson) · [![map](https://github.githubassets.com/favicons/favicon.svg)](https://github.com/EWS-Consulting-Public/ews-gis-assets/blob/main/data/ooe_wind_exclusion.geojson) | [`ooe_wind_exclusion.gpkg`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/ooe_wind_exclusion.gpkg) |
+| Kärnten RED III Windkraft-Beschleunigungszonen | [`download`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/ktn_red_iii_wind.geojson) · [![map](https://github.githubassets.com/favicons/favicon.svg)](https://github.com/EWS-Consulting-Public/ews-gis-assets/blob/main/data/ktn_red_iii_wind.geojson) | [`ktn_red_iii_wind.gpkg`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/ktn_red_iii_wind.gpkg) |
 
 > The GitHub map preview may skip very large GeoJSON files (OÖ exclusion is ~23 MB). Use the GPKG / QGIS path in that case.
 
@@ -62,12 +64,26 @@ Vorrangzonen from the Styrian Sachprogramm Windenergie (INSPIRE WFS).
 - **GeoJSON**: [`download`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/styria_sapro_wind.geojson) · [![map](https://github.githubassets.com/favicons/favicon.svg)](https://github.com/EWS-Consulting-Public/ews-gis-assets/blob/main/data/styria_sapro_wind.geojson)
 - **GeoPackage**: [`styria_sapro_wind.gpkg`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/styria_sapro_wind.gpkg)
 
+### Steiermark SAPRO Windenergie Bereich
+
+Plan Geltungsbereich (extent) for the same Styrian SAPRO Windenergie programme.
+
+- **GeoJSON**: [`download`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/styria_sapro_bereich.geojson) · [![map](https://github.githubassets.com/favicons/favicon.svg)](https://github.com/EWS-Consulting-Public/ews-gis-assets/blob/main/data/styria_sapro_bereich.geojson)
+- **GeoPackage**: [`styria_sapro_bereich.gpkg`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/styria_sapro_bereich.gpkg)
+
 ### OÖ Windkraftmasterplan Ausschlusszone
 
 Upper Austria exclusion zone from DORIS (shapefile zip).
 
 - **GeoJSON**: [`download`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/ooe_wind_exclusion.geojson) · [![map](https://github.githubassets.com/favicons/favicon.svg)](https://github.com/EWS-Consulting-Public/ews-gis-assets/blob/main/data/ooe_wind_exclusion.geojson)
 - **GeoPackage**: [`ooe_wind_exclusion.gpkg`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/ooe_wind_exclusion.gpkg)
+
+### Kärnten RED III Windkraft-Beschleunigungszonen
+
+Acceleration zones under K-ROG / RED III (OGD shapefile).
+
+- **GeoJSON**: [`download`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/ktn_red_iii_wind.geojson) · [![map](https://github.githubassets.com/favicons/favicon.svg)](https://github.com/EWS-Consulting-Public/ews-gis-assets/blob/main/data/ktn_red_iii_wind.geojson)
+- **GeoPackage**: [`ktn_red_iii_wind.gpkg`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/ktn_red_iii_wind.gpkg)
 
 
 ## Available Formats
@@ -78,10 +94,10 @@ Data is provided in **GeoJSON** and **GeoPackage (GPKG)** formats.
 
 ## How It Works
 
-1. **Automated Downloads**: A [scheduled GitHub Action](https://github.com/EWS-Consulting-Public/ews-gis-assets/actions/workflows/update.yaml) runs daily to fetch the latest data from source APIs
+1. **Automated Downloads**: A [scheduled GitHub Action](https://github.com/EWS-Consulting-Public/ews-gis-assets/actions/workflows/update.yaml) runs daily to fetch the latest data from source APIs. Each downloader runs independently — one upstream outage does not block the others; successful updates still commit/release, and the job fails at the end if any script failed.
 2. **Smart Updates**: Uses content hashing (via pandas) to detect data changes
 3. **Multi-Format Export**: Automatically converts and saves data in multiple GIS formats (GeoJSON, GPKG)
-4. **Commit + Release**: When hashes/files change, commits to `main` and publishes a GitHub Release (all GeoJSON/GPKG assets) so [`/releases/latest/download/…`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest) stays current
+4. **Commit + Release**: When hashes/files change, commits to `main` and publishes a GitHub Release (all present GeoJSON/GPKG assets) so [`/releases/latest/download/…`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest) stays current
 
 ## Technical Details
 
@@ -132,5 +148,7 @@ uv run download_austro_control.py
 uv run download_noe_wind_zones.py
 uv run download_noe_pv_zones.py
 uv run download_styria_sapro_wind.py
+uv run download_styria_sapro_bereich.py
 uv run download_ooe_wind_exclusion.py
+uv run download_ktn_red_iii_wind.py
 ```

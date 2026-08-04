@@ -42,10 +42,14 @@ README. Do not re-open that without a measured consumer need.
 | `uv run download_noe_wind_zones.py` | NÖ Windkraftzonen §20 ROG | `ews_gis_assets.zones` |
 | `uv run download_noe_pv_zones.py` | NÖ PV-Zonen §20 ROG | `ews_gis_assets.zones` |
 | `uv run download_styria_sapro_wind.py` | Steiermark SAPRO Windenergie Zone | `ews_gis_assets.zones` |
+| `uv run download_styria_sapro_bereich.py` | Steiermark SAPRO Windenergie Bereich | `ews_gis_assets.zones` |
 | `uv run download_ooe_wind_exclusion.py` | OÖ Windkraftmasterplan Ausschlusszone | `ews_gis_assets.zones` |
+| `uv run download_ktn_red_iii_wind.py` | Kärnten RED III Beschleunigungszonen | `ews_gis_assets.zones` |
 
-The Action runs all nightly (`update.yaml`). Local runs write under `data/`;
-only commit when the content hash says the frame changed.
+The Action runs all nightly (`update.yaml`), **fail-soft per script**: one
+upstream outage does not stop the others; successful `data/` updates still
+commit/release; the job fails at the end if any downloader failed. Local runs
+write under `data/`; only commit when the content hash says the frame changed.
 
 Burgenland Windkraft-Eignungszonen are listed as OGD but the distribution URL
 is intranet-only (`intranet.burgenland.at`) — not crawlable from public CI.
@@ -61,7 +65,9 @@ uv run download_austro_control.py
 uv run download_noe_wind_zones.py
 uv run download_noe_pv_zones.py
 uv run download_styria_sapro_wind.py
+uv run download_styria_sapro_bereich.py
 uv run download_ooe_wind_exclusion.py
+uv run download_ktn_red_iii_wind.py
 uv run ruff check --fix
 uv run pytest                          # when tests exist
 uv run python scripts/sync_agent_config.py

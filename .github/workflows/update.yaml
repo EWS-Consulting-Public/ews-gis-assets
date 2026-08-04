@@ -27,14 +27,34 @@ jobs:
       - name: Install the project
         run: uv sync --locked --all-extras --dev
 
-      - name: Run the update script
+      # Run every downloader even if one source is down. Successful updates still
+      # commit/release; a trailing step fails the job so the outage is visible.
+      - name: Run downloaders
+        id: downloads
         run: |
-          uv run download_noe_wind_turbines.py
-          uv run download_austro_control.py
-          uv run download_noe_wind_zones.py
-          uv run download_noe_pv_zones.py
-          uv run download_styria_sapro_wind.py
-          uv run download_ooe_wind_exclusion.py
+          set +e
+          failed=0
+          scripts=(
+            download_noe_wind_turbines.py
+            download_austro_control.py
+            download_noe_wind_zones.py
+            download_noe_pv_zones.py
+            download_styria_sapro_wind.py
+            download_styria_sapro_bereich.py
+            download_ooe_wind_exclusion.py
+            download_ktn_red_iii_wind.py
+          )
+          for script in "${scripts[@]}"; do
+            echo "::group::${script}"
+            uv run "${script}"
+            rc=$?
+            echo "::endgroup::"
+            if [ "${rc}" -ne 0 ]; then
+              echo "::error::${script} failed with exit code ${rc}"
+              failed=1
+            fi
+          done
+          echo "failed=${failed}" >> "${GITHUB_OUTPUT}"
 
       - name: Check for changes
         id: check_changes
@@ -61,8 +81,9 @@ jobs:
         run: |
           set -euo pipefail
           TAG="data-$(date -u +%Y.%m.%d-%H%M%S)"
-          # Always attach the full consumer asset set so /releases/latest/download/<name> stays valid.
-          ASSETS=(
+          # Attach whatever consumer assets exist so a single failed downloader
+          # cannot break the release of the others.
+          CANDIDATES=(
             data/windkraftanlagen.geojson
             data/windkraftanlagen.gpkg
             data/austro_control_icao.geojson
@@ -73,9 +94,25 @@ jobs:
             data/noe_pv_zones.gpkg
             data/styria_sapro_wind.geojson
             data/styria_sapro_wind.gpkg
+            data/styria_sapro_bereich.geojson
+            data/styria_sapro_bereich.gpkg
             data/ooe_wind_exclusion.geojson
             data/ooe_wind_exclusion.gpkg
+            data/ktn_red_iii_wind.geojson
+            data/ktn_red_iii_wind.gpkg
           )
+          ASSETS=()
+          for f in "${CANDIDATES[@]}"; do
+            if [ -f "${f}" ]; then
+              ASSETS+=("${f}")
+            else
+              echo "::warning::missing asset ${f} — skipped for this release"
+            fi
+          done
+          if [ "${#ASSETS[@]}" -eq 0 ]; then
+            echo "::error::no release assets found under data/"
+            exit 1
+          fi
           CHANGED="$(git diff --name-only HEAD~1 HEAD -- data/ || true)"
           NOTES="$(printf 'Automated GIS asset release.\n\nChanged paths:\n```\n%s\n```\n\nStable URLs:\n- https://github.com/%s/releases/latest/download/windkraftanlagen.geojson\n- https://github.com/%s/releases/latest/download/austro_control_icao.geojson\n- https://github.com/%s/releases/latest/download/noe_wind_zones.geojson\n' "$CHANGED" "${{ github.repository }}" "${{ github.repository }}" "${{ github.repository }}")"
           gh release create "$TAG" "${ASSETS[@]}" \
@@ -83,3 +120,9 @@ jobs:
             --notes "$NOTES" \
             --latest
           echo "Created https://github.com/${{ github.repository }}/releases/tag/${TAG}"
+
+      - name: Fail job if any downloader failed
+        if: steps.downloads.outputs.failed == '1'
+        run: |
+          echo "One or more downloaders failed — see grouped logs above."
+          exit 1
