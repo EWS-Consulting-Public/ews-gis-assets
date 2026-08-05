@@ -22,7 +22,15 @@ here. Evidence from a client project does not.
 If you cannot state a change without naming a project or an internal path,
 **the change is not ready for this repo** — say so rather than paraphrasing.
 
-## 2. `data/` is machine-written
+## 2. Scratch goes in `scratch/`
+
+Throwaway probes, UI dumps, and one-off scripts live under
+[`scratch/`](../../scratch/) (e.g. `scratch/<topic>/…`). **Do not** drop
+`_scratch*` files at the repo root, and never write probes into `data/` or
+`src/`. Contents are gitignored; the folder's README is the convention.
+Privacy (§1) still applies inside `scratch/`.
+
+## 3. `data/` is machine-written
 
 Published GeoJSON / GPKG / `.hash` files under `data/` are produced by the
 download scripts and the daily Action. **Do not hand-edit them** to "fix" a
@@ -32,7 +40,7 @@ decide whether a commit is warranted.
 KMZ/KML are deliberately not exported (size + weak attributes) — see the
 README. Do not re-open that without a measured consumer need.
 
-## 3. Download entry points
+## 4. Download entry points
 
 | Script | Dataset | Package module |
 |---|---|---|
@@ -45,7 +53,7 @@ README. Do not re-open that without a measured consumer need.
 | `uv run download_ooe_wind_exclusion.py` | OÖ Windkraftmasterplan Ausschlusszone | `ews_gis_assets.zones` |
 | `uv run download_ktn_red_iii_wind.py` | Kärnten RED III Beschleunigungszonen | `ews_gis_assets.zones` |
 
-The Action runs all nightly (`update.yaml`), **fail-soft per script**: one
+The Action runs the GIS downloaders nightly (`update.yaml`), **fail-soft per script**: one
 upstream outage does not stop the others; successful `data/` updates still
 commit/release; the job fails at the end if any downloader failed. Local runs
 write under `data/`; only commit when the content hash says the frame changed.
@@ -53,7 +61,7 @@ write under `data/`; only commit when the content hash says the frame changed.
 Burgenland Windkraft-Eignungszonen are listed as OGD but the distribution URL
 is intranet-only (`intranet.burgenland.at`) — not crawlable from public CI.
 
-## 4. Commands — uv only
+## 5. Commands — uv only
 
 No bare `python` on Windows (Store stub). Prefer:
 
@@ -68,14 +76,14 @@ uv run download_styria_sapro_bereich.py
 uv run download_ooe_wind_exclusion.py
 uv run download_ktn_red_iii_wind.py
 uv run ruff check --fix
-uv run pytest                          # when tests exist
+uv run pytest
 uv run python scripts/sync_agent_config.py
 uv run python scripts/sync_agent_config.py --check
 ```
 
 `prek` / `make format` for hooks. Discover Makefile targets with `make help`.
 
-## 5. Committing
+## 6. Committing
 
 - Only when Fabien asks.
 - Do not stage secrets, OneDrive conflict copies, or unrelated `.vscode` edits
@@ -83,7 +91,7 @@ uv run python scripts/sync_agent_config.py --check
 - Automated data commits use the Action's message shape
   (`chore: update GIS asset files (automated)`); human commits describe *why*.
 
-## 6. Agent config
+## 7. Agent config
 
 Author under `.cursor/`. Never edit `.claude/` by hand — see rule
 `agent-config-sync`. GitHub Copilot instruction files are retired; do not

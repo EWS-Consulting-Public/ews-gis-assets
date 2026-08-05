@@ -23,13 +23,9 @@ Two flags before you touch anything, both stated in full in rule `gis-project`:
 
 ## The conventions live in rules, not here
 
-All of them load automatically. This file does not restate them — that
-duplication is what drifted `AGENTS.md` and `CLAUDE.md` 141 lines apart in
-another repo in this estate.
-
 | Rule | Scope | Covers |
 |---|---|---|
-| [`gis-project`](.cursor/rules/gis-project.mdc) | always | Public-repo privacy, `data/` ownership, uv-only commands, the two download entry points, committing. **Start here if you need to run anything.** |
+| [`gis-project`](.cursor/rules/gis-project.mdc) | always | Public-repo privacy, `data/` ownership, uv-only commands, download entry points, committing. **Start here if you need to run anything.** |
 | [`gis-python`](.cursor/rules/gis-python.mdc) | `**/*.py` | Simplest correct structure, fail fast, absolute imports, content hashing, docstrings that say *why*. |
 | [`agent-config-sync`](.cursor/rules/agent-config-sync.mdc) | `{.claude,.cursor}/**` | `.cursor/` is authored, `.claude/` is generated. Never edit the latter. |
 
@@ -39,7 +35,7 @@ another repo in this estate.
 src/ews_gis_assets/
   noe.py                 NÖ Atlas wind-turbine download + clean
   austro_control.py      Austro Control ICAO obstacle scrape + parse
-  zones.py               NÖ / Styria / OÖ planning-zone downloaders
+  zones.py               NÖ / Styria / OÖ / KTN planning-zone downloaders
   helpers.py             content hashing / "did data change?"
   constants.py           upstream URLs
 download_noe_wind_turbines.py   CLI entry for the NÖ WTG dataset
@@ -51,10 +47,12 @@ download_styria_sapro_bereich.py CLI entry for Styria SAPRO plan extent
 download_ooe_wind_exclusion.py  CLI entry for OÖ exclusion zone
 download_ktn_red_iii_wind.py    CLI entry for Kärnten RED III zones
 data/                    published GeoJSON + GPKG + .hash sidecars (CI-owned)
-.github/workflows/update.yaml   daily midnight UTC refresh
+scratch/                 gitignored local probes (README + .gitignore tracked)
+.github/workflows/update.yaml   daily midnight UTC refresh (GIS downloaders)
 .cursor/                 authored rules (+ skills when any earn a place)
 .claude/                 generated - never edit
 scripts/sync_agent_config.py
+tests/                   pytest regressions
 ```
 
 ## Estate context (orientation only)

@@ -1,4 +1,6 @@
 
+# Prefer scratch/ (committed README + inner .gitignore). Root dumps are legacy.
+_scratch*
 
 # Old implementations (usually for CoPilot)
 **/__old_*.py

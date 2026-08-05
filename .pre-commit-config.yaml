@@ -25,10 +25,9 @@ repos:
   hooks:
   - id: check-added-large-files
     args: ['--maxkb=2048', '--enforce-all']
-    # Allow large lock files for APPLICATION projects (not libraries)
-    # uv.lock can be 500KB-1MB with many dependencies (normal for apps)
-    # This is REQUIRED for reproducibility and ISO 17025 compliance
-    exclude: '^(uv\.lock|poetry\.lock|package-lock\.json|yarn\.lock|.*\.ipynb)$'
+    # data/ holds published GeoJSON/GPKG (CI-owned, routinely multi-MB).
+    # Lock files can be large in APPLICATION projects (reproducibility).
+    exclude: '^(data/|uv\.lock$|poetry\.lock$|package-lock\.json$|yarn\.lock$|.*\.ipynb$)'
   - id: check-case-conflict
   - id: check-merge-conflict
   - id: check-symlinks

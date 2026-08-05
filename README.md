@@ -85,6 +85,10 @@ Acceleration zones under K-ROG / RED III (OGD shapefile).
 - **GeoJSON**: [`download`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/ktn_red_iii_wind.geojson) · [![map](https://github.githubassets.com/favicons/favicon.svg)](https://github.com/EWS-Consulting-Public/ews-gis-assets/blob/main/data/ktn_red_iii_wind.geojson)
 - **GeoPackage**: [`ktn_red_iii_wind.gpkg`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest/download/ktn_red_iii_wind.gpkg)
 
+### Related: UVPDB Windpark timelines
+
+Private repo [`EWS-Consulting-Private/ews-uvp-db`](https://github.com/EWS-Consulting-Private/ews-uvp-db) — not part of this GIS release pipeline.
+
 
 ## Available Formats
 

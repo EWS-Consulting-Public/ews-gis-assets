@@ -50,10 +50,26 @@
         "jinja-html": "html"
     },
     "explorer.confirmDragAndDrop": false,
-    "explorer.excludeGitIgnore": true,
+    // false so gitignored scratch/ + _scratch* stay visible; noise goes in files.exclude
+    "explorer.excludeGitIgnore": false,
     "files.autoSave": "off",
     "files.autoSaveDelay": 500,
     "files.eol": "\n",
+    "files.exclude": {
+        "**/.eggs": true,
+        "**/.mypy_cache": true,
+        "**/.nox": true,
+        "**/.nox-test-venv": true,
+        "**/.pytest_cache": true,
+        "**/.ruff_cache": true,
+        "**/.venv": true,
+        "**/__pycache__": true,
+        "**/*.egg-info": true,
+        "**/build": true,
+        "**/dist": true,
+        "**/htmlcov": true,
+        "**/node_modules": true
+    },
     "files.watcherExclude": {
         "**/__pycache__/**": true,
         "**/.git/objects/**": true,
