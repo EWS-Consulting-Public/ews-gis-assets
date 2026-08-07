@@ -8,9 +8,6 @@
 # This overrides the above pattern for docs/**/*.ipynb
 docs/**/*.ipynb !filter
 
-# Set the default behavior, in case people don't have core.autocrlf set.
-* text=lf
-
 # Explicitly declare text files you want to always be normalized and converted
 # to native line endings on checkout.
 *.md text
@@ -29,3 +26,10 @@ docs/**/*.ipynb !filter
 
 # Declare files that will always have CRLF line endings on checkout.
 #*.sln text eol=crlf
+
+# Normalize line endings to LF - in the index AND on checkout.
+# `text` is boolean: only `auto` is special. Bare `text=lf` leaves eol
+# unspecified, so the host's core.autocrlf decides the working tree and files
+# are not converted on checkout. Verified 2026-08-07 with
+# `git check-attr text eol -- README.md` across the estate.
+* text=auto eol=lf
