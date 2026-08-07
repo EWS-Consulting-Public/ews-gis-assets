@@ -2,7 +2,7 @@
 # More specific patterns override earlier patterns
 
 # STRIP outputs from all notebooks by default
-*.ipynb filter=jupyter
+*.ipynb filter=nbwipers diff=nbwipers
 
 # KEEP outputs in documentation notebooks (docs/)
 # This overrides the above pattern for docs/**/*.ipynb

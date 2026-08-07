@@ -5,12 +5,20 @@ ci:
 repos:
 # Standard hooks
 
-# Not yet implemented in prek
-# - repo: https://github.com/deshaw/nbstripout-fast
-#   rev: v1.1.1
-#   hooks:
-#     - id: nbstripout-fast
-#       types: [jupyter]
+# Notebook output control: the git filter strips on commit; these hooks verify
+# the filter is registered. Replaces the commented-out nbstripout-fast block,
+# which was parked because prek did not implement it - nbwipers does run under
+# prek, and is the estate standard (9 repos, 2026-08-07).
+# Fresh clone needs one step: `nbwipers install local`.
+- repo: https://github.com/felixgwilliams/nbwipers-pre-commit
+  rev: v0.6.2
+  hooks:
+    - id: nbwipers-check-install
+    - id: nbwipers-large-files
+      # No --enforce-all here, unlike ews-windpro: this repo stores GIS data on
+      # purpose, and --enforce-all walks the whole tree, flagging
+      # data/ooe_wind_exclusion.geojson (22 MB) and seven more assets that are
+      # the repo's reason to exist. Staged-only is the right gate here.
 
 - repo: https://github.com/mwouts/jupytext
   rev: v1.18.1  # pin to a tested version
