@@ -56,9 +56,17 @@ hooks = [
     { id = "check-merge-conflict" },
     { id = "check-symlinks" },
     { id = "check-yaml", exclude = "^conda\\.recipe/meta\\.yaml$" },
-    { id = "debug-statements" },
     { id = "end-of-file-fixer", exclude = "^data/" },
     { id = "mixed-line-ending", args = ["--fix=lf"] },
-    { id = "requirements-txt-fixer" },
     { id = "trailing-whitespace", exclude = "^data/" }
 ]
+
+[[repos]]
+repo = "https://github.com/pre-commit/pre-commit-hooks"
+rev = "v6.0.0"
+
+[[repos.hooks]]
+id = "debug-statements"
+
+[[repos.hooks]]
+id = "requirements-txt-fixer"
