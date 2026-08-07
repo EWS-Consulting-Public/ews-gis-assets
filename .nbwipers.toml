@@ -1,0 +1,40 @@
+# Notebook cleaning config for nbwipers (git filter + make format)
+# https://github.com/felixgwilliams/nbwipers
+
+id-action = "drop"
+strip-kernel-info = false
+drop-empty-cells = true
+
+extra-keys = [
+    "cell.metadata.code_folding",
+    "cell.metadata.execution",
+    "cell.metadata.heading_collapsed",
+    "cell.metadata.hidden",
+    "cell.metadata.init_cell",
+    "cell.metadata.tags",
+    "metadata.celltoolbar",
+    "metadata.jupytext",
+    "metadata.notify_time",
+    "metadata.varInspector",
+    "metadata.nbTranslate",
+]
+
+keep-keys = [
+    "cell.metadata.toc",
+    "metadata.toc",
+    "metadata.ewsTemplate",
+    "metadata.hide_input",
+    "metadata.keep_output",
+    "metadata.kernelspec.language",
+    "metadata.kernelspec.name",
+    "metadata.kernelspec.version",
+    "metadata.nbformat",
+    "metadata.nbformat_minor",
+]
+
+extend-exclude = [
+    "**/.venv/**",
+    "**/docs/**",
+    "**/.ipynb_checkpoints/**",
+    "**/.virtual_documents/**",
+]
