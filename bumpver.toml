@@ -4,7 +4,10 @@ version_pattern = "vYYYY0M0D[.PATCH]"
 commit_message = "bump version to {new_version}"
 tag_message = "{new_version}"
 tag_scope = "default"
-pre_commit_hook = "scripts/pre-commit-hook.sh"
+# cmd/sh polyglot — bumpver Popen(path) has no interpreter; must be one file.
+# Stages uv.lock inside the same commit as the version bump (do not move this
+# into nox: a post-commit sync leaves a dirty lock / second commit).
+pre_commit_hook = "scripts/pre-commit-hook.cmd"
 post_commit_hook = ""
 commit = true
 tag = true
