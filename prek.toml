@@ -1,0 +1,64 @@
+# Git hooks for ews-gis-assets. Run: prek run -a | prek install
+# Migrated from .pre-commit-config.yaml (issue #18, 2026-08-08).
+#:schema https://www.schemastore.org/prek.json
+
+[ci]
+autoupdate_commit_msg = "chore: update pre-commit hooks"
+autofix_commit_msg = "style: pre-commit fixes"
+
+[[repos]]
+repo = "https://github.com/felixgwilliams/nbwipers-pre-commit"
+rev = "v0.6.2"
+
+[[repos.hooks]]
+id = "nbwipers-check-install"
+
+[[repos.hooks]]
+id = "nbwipers-large-files"
+
+[[repos]]
+repo = "https://github.com/mwouts/jupytext"
+rev = "v1.18.1"
+
+[[repos.hooks]]
+id = "jupytext"
+args = ["--sync"]
+files = "\\.(ipynb|py)$"
+
+[[repos]]
+repo = "https://github.com/astral-sh/ruff-pre-commit"
+rev = "v0.14.3"
+
+[[repos.hooks]]
+id = "ruff"
+args = ["--fix", "--show-fixes"]
+
+[[repos.hooks]]
+id = "ruff-format"
+exclude = "^(docs)"
+
+[[repos]]
+repo = "local"
+
+[[repos.hooks]]
+id = "sync-agent-config"
+name = "agent config (.claude generated from .cursor)"
+entry = "uv run python scripts/sync_agent_config.py --check"
+language = "system"
+files = "^\\.(cursor|claude)/|^scripts/sync_agent_config\\.py$"
+pass_filenames = false
+
+[[repos]]
+repo = "builtin"
+hooks = [
+    { id = "check-added-large-files", args = ["--maxkb=2048", "--enforce-all"], exclude = "^(data/|uv\\.lock$|poetry\\.lock$|package-lock\\.json$|yarn\\.lock$|.*\\.ipynb$)" },
+    { id = "check-case-conflict" },
+    { id = "check-merge-conflict" },
+    { id = "check-symlinks" },
+    { id = "check-yaml", exclude = "^conda\\.recipe/meta\\.yaml$" },
+    { id = "debug-statements" },
+    { id = "end-of-file-fixer", exclude = "^data/" },
+    { id = "mixed-line-ending", args = ["--fix=lf"] },
+    { id = "requirements-txt-fixer" },
+    { id = "trailing-whitespace", exclude = "^data/" }
+]

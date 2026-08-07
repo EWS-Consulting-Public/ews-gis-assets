@@ -2,7 +2,14 @@
 # https://github.com/felixgwilliams/nbwipers
 
 id-action = "drop"
-strip-kernel-info = false
+# Strip kernelspec and language_info.version. They are per-machine facts -
+# kernelspec.display_name is the local venv name and language_info.version the
+# exact patch release - so recreating a venv or switching Windows<->Linux
+# produced spurious diffs in every notebook. Measured 2026-08-07 [FF-0708].
+# The old reason for keeping them (smudge fails in git-submodule worktrees)
+# no longer applies: ablmesh is the last repo with submodules and it has no
+# nbwipers config. Cost: an editor will prompt for a kernel on a fresh clone.
+strip-kernel-info = true
 drop-empty-cells = true
 
 extra-keys = [
@@ -25,9 +32,6 @@ keep-keys = [
     "metadata.ewsTemplate",
     "metadata.hide_input",
     "metadata.keep_output",
-    "metadata.kernelspec.language",
-    "metadata.kernelspec.name",
-    "metadata.kernelspec.version",
     "metadata.nbformat",
     "metadata.nbformat_minor",
 ]
