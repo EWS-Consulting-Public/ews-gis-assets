@@ -26,9 +26,6 @@ dependencies = [
 
 [project.optional-dependencies]
 
-[project.scripts]
-ews-gis-assets = "ews_gis_assets._version:show_version"
-
 [dependency-groups]
 lint = ["ruff>=0.12.10", "nbstripout-fast>=1.1.1", "pre-commit>=4.3.0"]
 test = ["pytest", "pytest-cov", "pytest-xdist"]

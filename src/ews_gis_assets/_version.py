@@ -93,7 +93,6 @@ def show_version() -> None:
         logger.table(
             deps_table,
             title="",
-            min_verbosity=1,
             key_name="Package",
             value_name="Version",
         )
@@ -108,7 +107,6 @@ def show_version() -> None:
         logger.table(
             cpp_table,
             title="",
-            min_verbosity=1,
             key_name="Library",
             value_name="Version",
         )
