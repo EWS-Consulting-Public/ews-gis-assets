@@ -26,6 +26,7 @@ Two flags before you touch anything, both stated in full in rule `gis-project`:
 | Rule | Scope | Covers |
 |---|---|---|
 | [`gis-project`](.cursor/rules/gis-project.mdc) | always | Public-repo privacy, `data/` ownership, uv-only commands, download entry points, committing. **Start here if you need to run anything.** |
+| [`public-repo-boundary`](.cursor/rules/public-repo-boundary.mdc) | always | **World-readable forever**, history and issue edit history included. The never-write list, the mechanical pre-commit check, and what to do when something internal is already published. |
 | [`gis-python`](.cursor/rules/gis-python.mdc) | `**/*.py` | Simplest correct structure, fail fast, absolute imports, content hashing, docstrings that say *why*. |
 | [`agent-config-sync`](.cursor/rules/agent-config-sync.mdc) | `{.claude,.cursor}/**` | `.cursor/` is authored, `.claude/` is generated. Never edit the latter. |
 
