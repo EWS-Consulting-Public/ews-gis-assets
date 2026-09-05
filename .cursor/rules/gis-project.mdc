@@ -23,6 +23,10 @@ here. Evidence from a client project does not.
 If you cannot state a change without naming a project or an internal path,
 **the change is not ready for this repo** — say so rather than paraphrasing.
 
+Rule `public-repo-boundary` carries the operational half: the full never-write
+list, the mechanical pre-commit check, and what to do when something internal
+turns out to be published already.
+
 ## 2. Scratch goes in `scratch/`
 
 Throwaway probes, UI dumps, and one-off scripts live under
