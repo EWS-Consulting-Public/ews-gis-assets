@@ -1,3 +1,7 @@
+---
+paths:
+  - "**/*.py"
+---
 <!-- GENERATED FROM .cursor/rules/gis-python.mdc BY scripts/sync_agent_config.py.
      Edit the .cursor source, then run: uv run python scripts/sync_agent_config.py -->
 
