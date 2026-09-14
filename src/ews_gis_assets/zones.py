@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import io
 import tempfile
+import time
 import zipfile
 from pathlib import Path
 
@@ -20,10 +21,34 @@ from ews_gis_assets.constants import (
 )
 from ews_gis_assets.helpers import to_wgs84
 
+# Connect budget is short so a firewalled host (gis.ktn.gv.at from GitHub Actions)
+# fails in ~1 min instead of hanging the whole nightly job for 3+ minutes.
+_HTTP_TIMEOUT = (15, 180)
+_HTTP_RETRIES = 3
+_HTTP_HEADERS = {
+    "User-Agent": "ews-gis-assets/1.0 (+https://github.com/EWS-Consulting-Public/ews-gis-assets)"
+}
+
+
+def _http_get(url: str) -> requests.Response:
+    """GET with short connect timeout and a few retries for transient blips."""
+    last_exc: BaseException | None = None
+    for attempt in range(1, _HTTP_RETRIES + 1):
+        try:
+            resp = requests.get(url, timeout=_HTTP_TIMEOUT, headers=_HTTP_HEADERS)
+            resp.raise_for_status()
+            return resp
+        except requests.RequestException as exc:
+            last_exc = exc
+            if attempt == _HTTP_RETRIES:
+                break
+            time.sleep(2 ** (attempt - 1))
+    assert last_exc is not None
+    raise last_exc
+
 
 def _fetch_geojson(url: str) -> gpd.GeoDataFrame:
-    resp = requests.get(url, timeout=180)
-    resp.raise_for_status()
+    resp = _http_get(url)
     gdf = gpd.read_file(io.BytesIO(resp.content))
     if gdf.empty:
         raise RuntimeError(f"Empty GeoJSON from {url}")
@@ -32,8 +57,7 @@ def _fetch_geojson(url: str) -> gpd.GeoDataFrame:
 
 def _read_shapefile_zip(url: str) -> gpd.GeoDataFrame:
     """Download a zip that contains exactly one .shp (+ siblings) and read it."""
-    resp = requests.get(url, timeout=180)
-    resp.raise_for_status()
+    resp = _http_get(url)
     with zipfile.ZipFile(io.BytesIO(resp.content)) as zf:
         names = [n for n in zf.namelist() if n.lower().endswith(".shp")]
         if len(names) != 1:
@@ -195,8 +219,21 @@ def download_ooe_wind_exclusion() -> gpd.GeoDataFrame:
 
 
 def download_ktn_red_iii_wind() -> gpd.GeoDataFrame:
-    """Kärnten RED III Windkraft-Beschleunigungszonen — K-ROG / RED III polygons."""
-    gdf = _read_shapefile_zip(KTN_RED_III_WIND_ZIP)
+    """Kärnten RED III Windkraft-Beschleunigungszonen — K-ROG / RED III polygons.
+
+    Upstream host ``gis.ktn.gv.at`` often refuses connections from non-AT /
+    cloud networks (including GitHub-hosted runners). Local AT runs work; CI
+    should treat a timeout as a soft per-script failure and keep published
+    ``data/ktn_red_iii_wind.*``.
+    """
+    try:
+        gdf = _read_shapefile_zip(KTN_RED_III_WIND_ZIP)
+    except requests.RequestException as exc:
+        raise RuntimeError(
+            "Kärnten RED III OGD unreachable "
+            f"({KTN_RED_III_WIND_ZIP}): {exc}. "
+            "Host is often blocked outside AT networks; published data left unchanged."
+        ) from exc
     gdf = to_wgs84(gdf)
 
     rename = {

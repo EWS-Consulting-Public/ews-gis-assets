@@ -32,6 +32,8 @@ OOE_WIND_EXCLUSION_ZIP = (
 )
 
 # Kärnten RED III Windkraft-Beschleunigungszonen — OGD shapefile zip (EPSG:31258).
+# Note: gis.ktn.gv.at is often unreachable from GitHub-hosted runners (connect
+# timeout); it works from AT networks. No public mirror as of 2026-09.
 KTN_RED_III_WIND_ZIP = (
     "https://gis.ktn.gv.at/OGD/Geographie_Planung/RED_III_Windkraftbeschleunigungszone.zip"
 )

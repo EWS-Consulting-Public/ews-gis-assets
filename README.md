@@ -98,10 +98,10 @@ Data is provided in **GeoJSON** and **GeoPackage (GPKG)** formats.
 
 ## How It Works
 
-1. **Automated Downloads**: A [scheduled GitHub Action](https://github.com/EWS-Consulting-Public/ews-gis-assets/actions/workflows/update.yaml) runs daily to fetch the latest data from source APIs. Each downloader runs independently — one upstream outage does not block the others; successful updates still commit/release, and the job fails at the end if any script failed.
+1. **Automated Downloads**: A [scheduled GitHub Action](https://github.com/EWS-Consulting-Public/ews-gis-assets/actions/workflows/update.yaml) runs daily to fetch the latest data from source APIs. Each downloader runs independently — one upstream outage does not block the others; successful updates still commit/release. The job stays green on partial success (warnings in the run summary) and fails only if every downloader failed.
 2. **Smart Updates**: Uses content hashing (via pandas) to detect data changes
 3. **Multi-Format Export**: Automatically converts and saves data in multiple GIS formats (GeoJSON, GPKG)
-4. **Commit + Release**: When hashes/files change, commits to `main` and publishes a GitHub Release (all present GeoJSON/GPKG assets) so [`/releases/latest/download/…`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest) stays current
+4. **Commit + Release** (Docker-style): When hashes/files change, commits to `main` and updates a floating [`data`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/tag/data) release (= `:latest`). **Only changed** GeoJSON/GPKG are re-uploaded; unchanged assets keep their existing URLs on that release. A thin immutable `data-YYYY.MM.DD-HHMMSS` snapshot records just the bump. Consumer URLs stay [`/releases/latest/download/…`](https://github.com/EWS-Consulting-Public/ews-gis-assets/releases/latest).
 
 ## Technical Details
 

@@ -28,12 +28,16 @@ jobs:
         run: uv sync --locked --all-extras --dev
 
       # Run every downloader even if one source is down. Successful updates still
-      # commit/release; a trailing step fails the job so the outage is visible.
+      # commit/release. The job stays green on partial success so one dead host
+      # (e.g. gis.ktn.gv.at from GitHub runners) cannot paint the whole release red;
+      # it fails only when every downloader failed.
       - name: Run downloaders
         id: downloads
         run: |
           set +e
           failed=0
+          ok=0
+          failed_scripts=()
           scripts=(
             download_noe_wind_turbines.py
             download_austro_control.py
@@ -50,11 +54,28 @@ jobs:
             rc=$?
             echo "::endgroup::"
             if [ "${rc}" -ne 0 ]; then
-              echo "::error::${script} failed with exit code ${rc}"
+              echo "::warning::${script} failed with exit code ${rc}"
               failed=1
+              failed_scripts+=("${script}")
+            else
+              ok=$((ok + 1))
             fi
           done
-          echo "failed=${failed}" >> "${GITHUB_OUTPUT}"
+          {
+            echo "failed=${failed}"
+            echo "ok=${ok}"
+            echo "failed_scripts=${failed_scripts[*]}"
+          } >> "${GITHUB_OUTPUT}"
+          {
+            echo "## Downloader summary"
+            echo
+            echo "- succeeded: **${ok}** / ${#scripts[@]}"
+            if [ "${failed}" -ne 0 ]; then
+              echo "- failed: \`${failed_scripts[*]}\`"
+            else
+              echo "- failed: none"
+            fi
+          } >> "${GITHUB_STEP_SUMMARY}"
 
       - name: Check for changes
         id: check_changes
@@ -74,55 +95,95 @@ jobs:
           git commit -m "chore: update GIS asset files (automated)"
           git push
 
-      - name: Create GitHub Release
+      # Docker-style releases: one floating `data` tag (= :latest) always holds the
+      # full current asset set; only changed GeoJSON/GPKG are re-uploaded (--clobber).
+      # Unchanged files keep their existing asset URLs on that release. A thin
+      # immutable snapshot tag records just this bump (no full re-upload spam).
+      - name: Publish release assets
         if: steps.check_changes.outputs.changes == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          TAG="data-$(date -u +%Y.%m.%d-%H%M%S)"
-          # Attach whatever consumer assets exist so a single failed downloader
-          # cannot break the release of the others.
-          CANDIDATES=(
-            data/windkraftanlagen.geojson
-            data/windkraftanlagen.gpkg
-            data/austro_control_icao.geojson
-            data/austro_control_icao.gpkg
-            data/noe_wind_zones.geojson
-            data/noe_wind_zones.gpkg
-            data/noe_pv_zones.geojson
-            data/noe_pv_zones.gpkg
-            data/styria_sapro_wind.geojson
-            data/styria_sapro_wind.gpkg
-            data/styria_sapro_bereich.geojson
-            data/styria_sapro_bereich.gpkg
-            data/ooe_wind_exclusion.geojson
-            data/ooe_wind_exclusion.gpkg
-            data/ktn_red_iii_wind.geojson
-            data/ktn_red_iii_wind.gpkg
+          FLOATING_TAG="data"
+          SNAPSHOT_TAG="data-$(date -u +%Y.%m.%d-%H%M%S)"
+          REPO="${{ github.repository }}"
+
+          # Whatever consumer assets exist under data/ (no hardcoded catalogue).
+          mapfile -t ALL_ASSETS < <(
+            find data -maxdepth 1 -type f \( -name '*.geojson' -o -name '*.gpkg' \) \
+              | sort
           )
-          ASSETS=()
-          for f in "${CANDIDATES[@]}"; do
-            if [ -f "${f}" ]; then
-              ASSETS+=("${f}")
-            else
-              echo "::warning::missing asset ${f} — skipped for this release"
-            fi
-          done
-          if [ "${#ASSETS[@]}" -eq 0 ]; then
+          if [ "${#ALL_ASSETS[@]}" -eq 0 ]; then
             echo "::error::no release assets found under data/"
             exit 1
           fi
-          CHANGED="$(git diff --name-only HEAD~1 HEAD -- data/ || true)"
-          NOTES="$(printf 'Automated GIS asset release.\n\nChanged paths:\n```\n%s\n```\n\nStable URLs:\n- https://github.com/%s/releases/latest/download/windkraftanlagen.geojson\n- https://github.com/%s/releases/latest/download/austro_control_icao.geojson\n- https://github.com/%s/releases/latest/download/noe_wind_zones.geojson\n' "$CHANGED" "${{ github.repository }}" "${{ github.repository }}" "${{ github.repository }}")"
-          gh release create "$TAG" "${ASSETS[@]}" \
-            --title "GIS assets ${TAG}" \
-            --notes "$NOTES" \
-            --latest
-          echo "Created https://github.com/${{ github.repository }}/releases/tag/${TAG}"
 
-      - name: Fail job if any downloader failed
+          # Consumer-facing files changed in this commit (.hash sidecars ignored).
+          mapfile -t CHANGED_ASSETS < <(
+            git diff --name-only HEAD~1 HEAD -- data/ \
+              | grep -E '\.(geojson|gpkg)$' \
+              || true
+          )
+          # New files show up in the commit; keep only paths that still exist.
+          FILTERED=()
+          for f in "${CHANGED_ASSETS[@]+"${CHANGED_ASSETS[@]}"}"; do
+            if [ -f "${f}" ]; then
+              FILTERED+=("${f}")
+            fi
+          done
+          CHANGED_ASSETS=("${FILTERED[@]+"${FILTERED[@]}"}")
+
+          if [ "${#CHANGED_ASSETS[@]}" -eq 0 ]; then
+            echo "::warning::data/ changed but no GeoJSON/GPKG in the commit; skipping release upload"
+            exit 0
+          fi
+
+          CHANGED_LIST="$(printf '%s\n' "${CHANGED_ASSETS[@]}")"
+          NOTES="$(printf 'Floating GIS asset set (Docker-style :latest).\n\nOnly changed assets are re-uploaded; unchanged files keep their existing URLs on this release.\n\nLast bumped paths:\n```\n%s\n```\n\nStable URLs:\n- https://github.com/%s/releases/latest/download/windkraftanlagen.geojson\n- https://github.com/%s/releases/latest/download/austro_control_icao.geojson\n- https://github.com/%s/releases/latest/download/noe_wind_zones.geojson\n' "$CHANGED_LIST" "$REPO" "$REPO" "$REPO")"
+          SNAP_NOTES="$(printf 'Immutable bump — changed assets only (unchanged datasets live on the floating `data` /latest release).\n\nChanged paths:\n```\n%s\n```\n' "$CHANGED_LIST")"
+
+          if gh release view "$FLOATING_TAG" >/dev/null 2>&1; then
+            echo "Updating floating release ${FLOATING_TAG} (clobber ${#CHANGED_ASSETS[@]} asset(s))"
+            gh release upload "$FLOATING_TAG" "${CHANGED_ASSETS[@]}" --clobber
+            gh release edit "$FLOATING_TAG" \
+              --title "GIS assets (latest)" \
+              --notes "$NOTES" \
+              --latest
+          else
+            echo "Bootstrapping floating release ${FLOATING_TAG} with full asset set"
+            gh release create "$FLOATING_TAG" "${ALL_ASSETS[@]}" \
+              --title "GIS assets (latest)" \
+              --notes "$NOTES" \
+              --latest
+          fi
+
+          echo "Creating thin snapshot ${SNAPSHOT_TAG} (${#CHANGED_ASSETS[@]} changed asset(s))"
+          gh release create "$SNAPSHOT_TAG" "${CHANGED_ASSETS[@]}" \
+            --title "GIS assets ${SNAPSHOT_TAG}" \
+            --notes "$SNAP_NOTES" \
+            --latest=false
+
+          {
+            echo "## Release"
+            echo
+            echo "- floating: [\`${FLOATING_TAG}\`](https://github.com/${REPO}/releases/tag/${FLOATING_TAG}) (latest)"
+            echo "- snapshot: [\`${SNAPSHOT_TAG}\`](https://github.com/${REPO}/releases/tag/${SNAPSHOT_TAG}) — changed only"
+            echo "- uploaded: \`${CHANGED_ASSETS[*]}\`"
+          } >> "${GITHUB_STEP_SUMMARY}"
+
+          echo "Floating https://github.com/${REPO}/releases/tag/${FLOATING_TAG}"
+          echo "Snapshot https://github.com/${REPO}/releases/tag/${SNAPSHOT_TAG}"
+
+      # Fail only on total outage. Partial failures already committed/released above
+      # and are visible as warnings + the step summary.
+      - name: Fail only if every downloader failed
         if: steps.downloads.outputs.failed == '1'
         run: |
-          echo "One or more downloaders failed — see grouped logs above."
-          exit 1
+          ok="${{ steps.downloads.outputs.ok }}"
+          failed_scripts="${{ steps.downloads.outputs.failed_scripts }}"
+          if [ "${ok}" -eq 0 ]; then
+            echo "::error::All downloaders failed (${failed_scripts}). Nothing healthy to publish."
+            exit 1
+          fi
+          echo "::warning::Partial downloader failure (${failed_scripts}); ${ok} script(s) succeeded — commit/release not blocked."

@@ -60,8 +60,19 @@ README. Do not re-open that without a measured consumer need.
 
 The Action runs the GIS downloaders nightly (`update.yaml`), **fail-soft per script**: one
 upstream outage does not stop the others; successful `data/` updates still
-commit/release; the job fails at the end if any downloader failed. Local runs
-write under `data/`; only commit when the content hash says the frame changed.
+commit/release. The job stays green on partial success (warnings + step summary)
+and fails only if every downloader failed — so a single dead host cannot paint
+the whole release red. Local runs write under `data/`; only commit when the
+content hash says the frame changed.
+
+Releases are Docker-style: floating tag `data` (= GitHub “latest”) always holds
+the full current asset set; only changed GeoJSON/GPKG are `--clobber` uploaded.
+Unchanged files keep their existing asset URLs. Thin `data-*` snapshots attach
+the bump only — do not re-upload the whole catalogue on every nightly change.
+
+`gis.ktn.gv.at` (Kärnten RED III) often times out from GitHub-hosted runners
+while working from AT networks; keep published `data/ktn_red_iii_wind.*` when
+that happens.
 
 Burgenland Windkraft-Eignungszonen are listed as OGD but the distribution URL
 is intranet-only (`intranet.burgenland.at`) — not crawlable from public CI.

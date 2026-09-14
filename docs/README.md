@@ -12,10 +12,11 @@ when geometry or attributes changed.
 
 ```mermaid
 flowchart LR
-    subgraph nightly["nightly Action — fail-soft per script"]
+    subgraph nightly["nightly Action — fail-soft; Docker-style release"]
         SRC["Land open-data portals"] --> DL["download_*.py"]
         DL --> HASH["helpers.py<br/>content hash"]
         HASH -->|changed| DATA["data/*.geojson + *.gpkg"]
+        DATA --> REL["floating data release<br/>clobber changed only"]
     end
 ```
 
