@@ -105,7 +105,8 @@ uv run python scripts/sync_agent_config.py --check
 - Do not stage secrets, OneDrive conflict copies, or unrelated `.vscode` edits
   you did not make for this task.
 - Automated data commits use the Action's message shape
-  (`chore: update GIS asset files (automated)`); human commits describe *why*.
+  (`chore: update GIS assets (automated)` plus a body listing changed dataset
+  stems); human commits describe *why*.
 
 ## 7. Agent config
 

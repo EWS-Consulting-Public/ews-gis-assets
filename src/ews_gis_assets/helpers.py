@@ -1,11 +1,15 @@
 from __future__ import annotations
 
 import hashlib
+import json
 from pathlib import Path
 
 import geopandas as gpd
 import pandas as pd
 from folium import Map
+
+# Catalogue stamps (e.g. NÖ "Stand") live here — not in hashed feature attributes.
+LAYER_METADATA_ATTR = "layer_metadata"
 
 
 def show_folium_safe(m: Map, height=500):
@@ -80,8 +84,37 @@ def is_data_updated(gdf: gpd.GeoDataFrame, hash_file: Path) -> bool:
     return True
 
 
+def _layer_metadata(gdf: gpd.GeoDataFrame) -> dict[str, str] | None:
+    meta = gdf.attrs.get(LAYER_METADATA_ATTR)
+    if not meta:
+        return None
+    return {str(k): str(v) for k, v in dict(meta).items()}
+
+
+def _write_geodata(gdf: gpd.GeoDataFrame, path: Path, driver: str) -> None:
+    """Write GeoJSON/GPKG, attaching catalogue metadata when present on ``gdf.attrs``."""
+    meta = _layer_metadata(gdf)
+    if driver == "GPKG":
+        kwargs = {"layer_metadata": meta} if meta else {}
+        gdf.to_file(path, driver=driver, **kwargs)
+        return
+    if driver == "GeoJSON":
+        gdf.to_file(path, driver=driver)
+        if meta:
+            # OGR GeoJSON ignores layer_metadata; keep stamps as FC foreign members.
+            payload = json.loads(path.read_text(encoding="utf-8"))
+            payload.update(meta)
+            path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+        return
+    gdf.to_file(path, driver=driver)
+
+
 def publish_dataset(gdf: gpd.GeoDataFrame, output_dir: Path, file_name: str) -> bool:
-    """Hash-gate then write GeoJSON + GPKG. Returns True when files were written."""
+    """Hash-gate then write GeoJSON + GPKG. Returns True when files were written.
+
+    Optional catalogue metadata on ``gdf.attrs['layer_metadata']`` is written into
+    GPKG layer metadata / GeoJSON FeatureCollection foreign members — not hashed.
+    """
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     hash_file = output_dir / f"{file_name}.hash"
@@ -92,7 +125,7 @@ def publish_dataset(gdf: gpd.GeoDataFrame, output_dir: Path, file_name: str) -> 
 
     for suffix, driver in ((".geojson", "GeoJSON"), (".gpkg", "GPKG")):
         file_path = output_dir / f"{file_name}{suffix}"
-        gdf.to_file(file_path, driver=driver)
+        _write_geodata(gdf, file_path, driver)
         print(f"Saved {driver} file: {file_path}")
 
     print("Changes detected. Files updated and can be pushed to the repository.")

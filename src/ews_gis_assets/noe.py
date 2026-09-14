@@ -5,6 +5,7 @@ import pandas as pd
 import requests
 
 from ews_gis_assets.constants import NOE_GEOJSON_URL
+from ews_gis_assets.helpers import LAYER_METADATA_ATTR
 
 
 def download_noe_geojson() -> gpd.GeoDataFrame | None:
@@ -123,5 +124,21 @@ def download_noe_geojson() -> gpd.GeoDataFrame | None:
 
     # We need to sort in a defined order to have consistent output
     gdf = gdf.sort_values(by=["Vorhaben", "Name der WKA"]).reset_index(drop=True)
+
+    # "Stand" is the catalogue publication stamp (same on every row). It is not
+    # turbine truth — exclude it from the content hash / feature attributes and
+    # publish it as file metadata (PublicationDate) so a catalogue re-stamp alone
+    # does not force a data commit.
+    stand = gdf["Stand"].astype("string").str.strip()
+    stand_values = [v for v in stand.dropna().unique().tolist() if v]
+    if len(stand_values) != 1:
+        raise ValueError(f"Expected a single catalogue Stand date, got: {stand_values!r}")
+    raw_stand = stand_values[0]
+    try:
+        publication_date = pd.to_datetime(raw_stand, dayfirst=True).date().isoformat()
+    except (TypeError, ValueError):
+        publication_date = raw_stand
+    gdf = gdf.drop(columns=["Stand"])
+    gdf.attrs[LAYER_METADATA_ATTR] = {"PublicationDate": publication_date}
 
     return gdf

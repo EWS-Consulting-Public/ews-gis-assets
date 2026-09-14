@@ -92,7 +92,19 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add data/
-          git commit -m "chore: update GIS asset files (automated)"
+          mapfile -t datasets < <(
+            git diff --cached --name-only -- data/ \
+              | grep -E '\.(geojson|gpkg)$' \
+              | xargs -n1 basename \
+              | sed -E 's/\.(geojson|gpkg)$//' \
+              | sort -u
+          )
+          if [ "${#datasets[@]}" -eq 0 ]; then
+            git commit -m "chore: update GIS assets (automated)"
+          else
+            body="$(printf -- '- %s\n' "${datasets[@]}")"
+            git commit -m "chore: update GIS assets (automated)" -m "$body"
+          fi
           git push
 
       # Docker-style releases: one floating `data` tag (= :latest) always holds the
